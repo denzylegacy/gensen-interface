@@ -1,82 +1,33 @@
-import requests
 from pprint import pprint
-from infra import log, COINGECKO_API_KEY
+
+from infra import log
+from coingecko import Coingecko
 
 
 class ゲンセン:
-    """
-    Gensen -Fonte de Ouro-
+    """Gensen -Golden Fountain-
+
+    - Sell for every R$5.00 of profit (This value may be changed after future analysis.)
+    - Supply:
+      - Think about what the issue of gas depletion will be like (As with each sale the value of the crypto will be reduced)
+    - Perform automatic analysis for low supply suggestion per token
+    - Cover the initial cost invested
+    - Obtain at least half of the capital invested apart from covering the same amount
+
+    Considerations:
+    * It must be necessary to input the assets and values for the assets
+    for each sale, the machine must request confirmation of the sale, as long as the Coinbase API is not implemented
+    This is to avoid problems (I'm sorry and I'm not going to explain them now...)
+
+    * The user must be notified when to make the sale and purchase, and which assets
+    * Create a watch list, so as soon as an asset falls below a certain percentage,
+    a purchase notification is made
     """
 
     def __init__(self) -> None:
-        self.coingecko_api_url: str = "https://api.coingecko.com/api/v3"
-        self.coingecko_api_key: str = COINGECKO_API_KEY
+        pass
     
-    def auth(self) -> int:
-        headers = {
-            "accept": "application/json", "x-cg-api-key": self.coingecko_api_key
-        }
-
-        response = requests.get(url=f"{self.coingecko_api_url}/ping", headers=headers)
-
-        if response.status_code == 200:
-            log.info(response.json())
-            return response.status_code
-        else:
-            log.error(f"{response.status_code}, {response.text}")
-            return response.status_code
-
-    def coins_list(self):
-        headers = {
-            "accept": "application/json", "x-cg-api-key": self.coingecko_api_key
-        }
-
-        response = requests.get(url=f"{self.coingecko_api_url}/coins/list", headers=headers)
-        
-        log.info(response.text)
-
-        return response.text
-    
-    def coin_data_by_id(self, coind_id: str) -> dict:
-        headers = {
-            "accept": "application/json", "x-cg-api-key": self.coingecko_api_key
-        }
-
-        response = requests.get(url=f"{self.coingecko_api_url}/coins/{coind_id}", headers=headers)
-
-        return response.json()
-
-    def coin_market_data(self, coind_id: str):
-        coin_data = self.coin_data_by_id(coind_id=coind_id)
-        return coin_data["market_data"]
-
-    def coin_current_price_for_btc_usd_brl(self, coind_id: str):
-        coin_data = self.coin_data_by_id(coind_id=coind_id)
-        
-        btc: int = coin_data["market_data"]["current_price"]["btc"]
-        usd: int = coin_data["market_data"]["current_price"]["usd"]
-        brl: int = coin_data["market_data"]["current_price"]["brl"]
-
-        log.info(f"btc: {btc}, usd: {usd}, brl: {brl}")
-        return
-
-    def get_token_info(self):
-        token_id: str = ""
-        url = f"{self.coingecko_api_url}/simple/token_price/{token_id}"
-
-        headers = {"accept": "application/json"}
-
-        response = requests.get(url, headers=headers)
-
-        print(response.text)
-        return
-
-
+   
 if __name__ == "__main__":
-    gensen = ゲンセン()
-    # gensen.auth()
-    # gensen.coins_list()
-    # pprint(gensen.coin_data_by_id(coind_id="bitcoin"))
-    # gensen.coin_market_data(coind_id="bitcoin")
-    gensen.coin_current_price_for_btc_usd_brl(coind_id="bitcoin")
+    gensen: object = ゲンセン()
     
