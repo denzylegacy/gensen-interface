@@ -95,10 +95,10 @@ class JsonDB:
 
 
 if __name__ == "__main__":
-    json_db = JsonDB(BASE_PATH + "/database/db.json")
-
+    json_db = JsonDB(BASE_PATH + "/instance/db.json")
+    
     user = "Anna"
-    user_path = r"D:\Work\30\WAAPP\src\user_data"
+    user_path = r"D:/Work/30/src/user_data"
 
     # Add user
     json_db.create(
