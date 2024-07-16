@@ -1,0 +1,63 @@
+{
+    "options":  [
+         ["SUPORTE GERAL", "Dúvidas gerais e suporte.", "🌐"],
+         ["SUPORTE DE COBRANÇA", "Dúvidas sobre cobrança e pagamento.", "💰"],
+         ["SUPORTE TÉCNICO", "Problemas técnicos e assistência.", "🔧"],
+         ["SUPORTE DE CONTA", "Ajuda com a conta e configurações.", "👤"],
+         ["OUTRO", "Outras dúvidas ou problemas.", "❓"]
+     ],
+     "tickets": {
+         "title": "",
+         "description": "> Clique no ticket abaixo!\n> Obs.: não abra um ticket sem necessidade!",
+         "already_created_a_ticket": "Você já criou um ticket, então feche-o para abrir outro!"
+     },
+     "channel_ticket": {
+         "message_ticket": "> {0} Clique no botão abaixo para deletar esse ticket!",
+         "message_channel_exist": "> Você já abriu um ticket!",
+         "message_channel_deleted": "> {0} (ID: {1}) deletou o ticket {2}!",
+         "messge_ticket_deleted_press": "> {0} você deseja realmente deletar esse ticket?",
+         "dropdown_response": "Você selecionou:",
+         "dropdown_placeholder": "Escolha uma opção de ticket",
+         "ephemeral_message": "Essa mensagem é privada, então você pode deletá-la atualizando a tela (Ctrl+R) ou clicando em 'ignorar mensagem!' ✅",
+         "message_ticket_created": "Seu ticket foi criado com sucesso no canal <#{0}>! ✅"
+     },
+     "bot_configs": {
+        "client_id": 1205621013417693205,
+        "channel_log": 1262569049900974080,
+        "channel_ticket_log": 1262569092619964509,
+        "channel_bot_erro": 1262569124199137391,
+        "sync_guild_id": 1262568793968873596,
+        "prefix": "g!",
+        "premium_channel_support": 1262569380865114213,
+        "role_client_premium_id": "premium",
+        "set_language": "O idioma foi definido para {0} com sucesso!",
+        "channel_trading": 1262569655222927371,
+        "channel_trading_log": 1262569988611506227
+    },
+     "payments_messages": {
+         "no_perms": "O bot não possui permissões para criar ou modificar cargos!",
+         "success": "O pagamento de ordem `{0}` do {1} (Nome: {2} e ID: {3}) de R${4} foi recebido com sucesso!",
+         "payment_error": "Houve um erro ao processar a compra!",
+         "order_payment": "O membro {0} (ID:`{1}`), comprou o produto de ordem `{2}` no valor de `R${3}`! Caso o cliente tenha enfrentado algum erro envie o link abaixo para ele continuar comprando:\n{4}!",
+         "warning_payment": "Você está comprando R${0} e sua ordem é `{1}`!",
+         "order_status_success": "O pagamento de ordem {0} foi recebido!",
+         "order_status_error": "O pagamento de ordem {0} ainda não foi recebido!"
+     },
+     "mysql_messages": {
+         "delete_table_success": "A tabela {0} foi deletada com sucesso!",
+         "clear_table_payments": "O tabela {0} foi resetada com sucesso!"
+     },
+     "general_cmd": {
+         "sync_error_semicolon": "Você precisa separar com ';' (ponto e vírgula)!"
+     },
+     "paypal": {
+         "return_url": "https://discord.gg/VzttVEV8xK",
+         "cancel_url": "https://discord.gg/VzttVEV8xK",
+         "accepted_currencies": ["BRL", "USD", "EUR"],
+         "currency_code": "BRL"
+     },
+     "decorators": {
+        "warning_owner": "Somente os desenvolvedores do Gensen podem executar este comando!",
+        "bot_owners": [1011675274112401500]
+     }
+ }

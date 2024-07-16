@@ -14,3 +14,4 @@ OPTIONS = JSONHandler().read_options_json(r"src/json/options.json")
 
 # API KEYs
 COINGECKO_API_KEY: str = os.getenv("COINGECKO_API_KEY", "")
+DISCORD_TOKEN: str = os.getenv("DISCORD_TOKEN", "")
