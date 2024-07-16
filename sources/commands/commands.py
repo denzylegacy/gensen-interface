@@ -6,7 +6,7 @@ from typing import Optional, Literal
 from discord import app_commands
 
 from local_io import JSONHandler
-from sources.decorators import is_bot_owner
+from sources.decorators import bot_owner
 import secrets, string
 
 
@@ -20,11 +20,11 @@ class GeneralCommands(commands.Cog):
 		self.bot = bot
 
 	### command 1
-	# @is_bot_owner
 	@commands.hybrid_command(name="sync", brief="Sync commands")
-	@commands.has_permissions(administrator=True)
 	@commands.cooldown(1, 10, commands.BucketType.user)
 	@app_commands.guilds(MY_GUILD_ID)
+	@commands.has_permissions(administrator=True)
+	@bot_owner
 	async def sync(
 			self,
 			ctx: commands.Context,
@@ -116,10 +116,10 @@ class GeneralCommands(commands.Cog):
 			tb = traceback.format_exc()
 			print(tb)
 
-	# command 3
+	# command 2
 	@commands.hybrid_command(name="create_invite", brief="Create Invitation")
-	@commands.has_permissions(administrator=True)
 	@commands.cooldown(1, 30, commands.BucketType.user)
+	@commands.has_permissions(administrator=True)
 	async def create_invite(
 			self, ctx, reason=None, max_age=0, max_uses=0, temporary=False,
 		unique=True, target_type=None, target_user=None, target_application_id=None
@@ -136,10 +136,10 @@ class GeneralCommands(commands.Cog):
 			f"🔗 Link para este canal: {invite.url}"
 		)
 
-	# command 4
+	# command 3
 	@commands.hybrid_command(name="gerar_token", brief="Gerar Token")
-	@commands.has_permissions(administrator=True)
 	@commands.cooldown(1, 30, commands.BucketType.user)
+	@commands.has_permissions(administrator=True)
 	async def gerar_token(
 			self, ctx, characters=50, case_sensitivity=False, upper_case=False
 	):

@@ -53,7 +53,7 @@ class Coingecko:
         coin_data: dict = self.coin_data_by_id(coind_id=coind_id)
         return coin_data["market_data"]
 
-    def coin_current_price_for_btc_usd_brl(self, coind_id: str):
+    def coin_current_price_for_btc_usd_brl(self, coind_id: str) -> dict:
         coin_data = self.coin_data_by_id(coind_id=coind_id)
         
         btc: int = coin_data["market_data"]["current_price"]["btc"]
@@ -61,7 +61,10 @@ class Coingecko:
         brl: int = coin_data["market_data"]["current_price"]["brl"]
 
         log.info(f"btc: {btc}, usd: {usd}, brl: {brl}")
-        return
+        
+        return {
+            "btc": btc, "usd": usd, "brl": brl
+        }
 
     def get_token_info(self) -> dict:
         token_id: str = ""
