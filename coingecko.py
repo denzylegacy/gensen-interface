@@ -36,7 +36,7 @@ class Coingecko:
             url=f"{self.coingecko_api_url}/coins/list", headers=headers
         )
 
-        return response.text
+        return response.json()
 
     def coin_data_by_id(self, coind_id: str) -> dict:
         headers: dict = {
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     coingecko: object = Coingecko()
 
     # coingecko.auth()
-    # coingecko.coins_list()
+    print(len(coingecko.coins_list()))
     # pprint(coingecko.coin_data_by_id(coind_id="bitcoin"))
     # coingecko.coin_market_data(coind_id="bitcoin")
-    coingecko.coin_current_price_for_btc_usd_brl(coind_id="bitcoin")
+    # coingecko.coin_current_price_for_btc_usd_brl(coind_id="bitcoin")

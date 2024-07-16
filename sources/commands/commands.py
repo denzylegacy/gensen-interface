@@ -172,10 +172,10 @@ class GeneralCommands(commands.Cog):
 	@commands.cooldown(1, 5, commands.BucketType.user)
 	@commands.has_permissions(administrator=True)
 	async def add_asset(
-			self, ctx, asset_id="bitcoin", amount_invested=100
+			self, ctx, asset_id="ethereum", amount_invested=100
 	):
 		"""(Gensen) Add asset"""
-		await ctx.defer(ephemeral=True)
+		await ctx.defer(ephemeral=False)
 
 		price_for_btc_usd_brl: dict = self.coingecko.coin_current_price_for_btc_usd_brl(coind_id=asset_id)
 
