@@ -30,4 +30,3 @@ class ゲンセン:
 
 if __name__ == "__main__":
     gensen: object = ゲンセン()
-    

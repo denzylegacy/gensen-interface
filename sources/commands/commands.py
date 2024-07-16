@@ -7,8 +7,10 @@ from discord import app_commands
 
 from local_io import JSONHandler
 from sources.decorators import bot_owner
+from coingecko import Coingecko
 import secrets, string
-
+from crud import JsonDB
+from infra.settings import BASE_PATH
 
 data_options = JSONHandler(file_path="./infra/options.json").read_json()
 
@@ -18,8 +20,10 @@ MY_GUILD_ID = discord.Object(data_options["bot_configs"]["sync_guild_id"], type=
 class GeneralCommands(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+		self.coingecko: object = Coingecko()
+		self.json_db = JsonDB(BASE_PATH + "/instance/db.json")
 
-	### command 1
+	# command 1
 	@commands.hybrid_command(name="sync", brief="Sync commands")
 	@commands.cooldown(1, 10, commands.BucketType.user)
 	@app_commands.guilds(MY_GUILD_ID)
@@ -162,6 +166,83 @@ class GeneralCommands(commands.Cog):
 		await ctx.send(
 			f"📦 Seu token de {len(token)} caracteres:\n||{token}||"
 		)
+
+	# command 4
+	@commands.hybrid_command(name="add_asset", brief="(Gensen) Add asset")
+	@commands.cooldown(1, 5, commands.BucketType.user)
+	@commands.has_permissions(administrator=True)
+	async def add_asset(
+			self, ctx, asset_id="bitcoin", amount_invested=100
+	):
+		"""(Gensen) Add asset"""
+		await ctx.defer(ephemeral=True)
+
+		price_for_btc_usd_brl: dict = self.coingecko.coin_current_price_for_btc_usd_brl(coind_id=asset_id)
+
+		user_data = self.json_db.read(collection="users", doc=str(ctx.author.id))
+
+		if not user_data:
+			self.json_db.create(
+				collection="users", 
+				doc=str(ctx.author.id), 
+				attributes=[{asset_id: price_for_btc_usd_brl}]
+			)
+
+			embed = discord.Embed(
+				title="Asset Addition",
+				color=0xffa07a
+			)
+
+			embed.add_field(
+				name="",
+				value=f"User ID: {ctx.author.id}",
+				inline=False
+			)
+
+			embed.add_field(
+				name="Asset",
+				value=asset_id,
+			)
+
+			embed.add_field(
+				name="Amount",
+				value=f"R${amount_invested}",
+			)
+
+			embed.add_field(
+				name=f"Success!",
+				value="The asset and value have been set!",
+				inline=False
+			)
+
+			embed.set_author(name=self.bot.user.name, icon_url=self.bot.user.avatar.url)
+			embed.set_footer(
+				text=f"Asset added with ♥ by {self.bot.user.name} - "
+						f"Copyright © 2023",
+				icon_url=self.bot.user.avatar.url)
+
+			await ctx.send(embed=embed)
+		else:
+			embed = discord.Embed(
+				title="Asset Addition",
+				description="",
+				color=0xffa07a
+			)
+
+			embed.add_field(
+				name=f"Warning!",
+				value="This asset has already been linked by you before!",
+				inline=False
+			)
+
+			embed.set_author(name=self.bot.user.name, icon_url=self.bot.user.avatar.url)
+			embed.set_footer(
+				text=f"{self.bot.user.name} - "
+						f"Copyright © 2024",
+				icon_url=self.bot.user.avatar.url)
+
+			await ctx.send(embed=embed)
+
 
 async def setup(bot: commands.Bot) -> None:
 	await bot.add_cog(GeneralCommands(bot), guild=MY_GUILD_ID)

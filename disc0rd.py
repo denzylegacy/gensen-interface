@@ -8,10 +8,8 @@ import datetime
 import traceback
 from discord.ext import commands
 from discord.enums import ActivityType
-
 from local_io import JSONHandler
 from infra import log, DISCORD_TOKEN
-from coingecko import Coingecko
 
 load_dotenv()
 

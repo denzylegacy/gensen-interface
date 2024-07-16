@@ -29,7 +29,7 @@ class Monitoring(commands.Cog):
             errors = None
 
             print(f"({date_time}) running code...")
-            tipi_notification_channel = self.bot.get_channel(1262585672787824703)
+            notification_channel = self.bot.get_channel(1262585672787824703)
 
             for attempt in range(4):
                 if not successful_attempt:
@@ -88,8 +88,7 @@ class Monitoring(commands.Cog):
 
                         if len(coins) > 0 or "20:00:" not in str(date_time):
                             await asyncio.sleep(1)
-                            await tipi_notification_channel.send(embed=embed)
-
+                            await notification_channel.send(embed=embed)
                         successful_attempt = True
                         await asyncio.sleep(30)
 

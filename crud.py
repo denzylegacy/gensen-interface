@@ -3,7 +3,7 @@
 import os
 import json
 from typing import Dict, List, Any
-from .infra import BASE_PATH, log
+from infra import BASE_PATH, log
 
 
 class JsonDB:

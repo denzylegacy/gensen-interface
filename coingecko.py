@@ -12,12 +12,12 @@ class Coingecko:
     def __init__(self) -> None:
             self.coingecko_api_url: str = "https://api.coingecko.com/api/v3"
             self.coingecko_api_key: str = COINGECKO_API_KEY
-    
+
     def auth(self) -> int:
         headers = {
             "accept": "application/json", "x-cg-api-key": self.coingecko_api_key
         }
-        
+
         response = requests.get(url=f"{self.coingecko_api_url}/ping", headers=headers)
 
         if response.status_code == 200:
@@ -37,7 +37,7 @@ class Coingecko:
         )
 
         return response.text
-    
+
     def coin_data_by_id(self, coind_id: str) -> dict:
         headers: dict = {
             "accept": "application/json", "x-cg-api-key": self.coingecko_api_key
@@ -55,13 +55,13 @@ class Coingecko:
 
     def coin_current_price_for_btc_usd_brl(self, coind_id: str) -> dict:
         coin_data = self.coin_data_by_id(coind_id=coind_id)
-        
+
         btc: int = coin_data["market_data"]["current_price"]["btc"]
         usd: int = coin_data["market_data"]["current_price"]["usd"]
         brl: int = coin_data["market_data"]["current_price"]["brl"]
 
         log.info(f"btc: {btc}, usd: {usd}, brl: {brl}")
-        
+
         return {
             "btc": btc, "usd": usd, "brl": brl
         }
