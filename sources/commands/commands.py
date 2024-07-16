@@ -15,17 +15,17 @@ data_options = JSONHandler(file_path="./infra/options.json").read_json()
 MY_GUILD_ID = discord.Object(data_options["bot_configs"]["sync_guild_id"], type=discord.Guild)
 
 
-class Commands(commands.Cog):
+class GeneralCommands(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
 	### command 1
+	# @is_bot_owner
+	@commands.hybrid_command(name="sync", brief="Sync commands")
 	@commands.has_permissions(administrator=True)
-	@commands.hybrid_command(name='sync', brief="sincronizar comandos")
 	@commands.cooldown(1, 10, commands.BucketType.user)
-	@is_bot_owner
 	@app_commands.guilds(MY_GUILD_ID)
-	async def sync_command(
+	async def sync(
 			self,
 			ctx: commands.Context,
 			guilds: Optional[str] = None,
@@ -116,113 +116,8 @@ class Commands(commands.Cog):
 			tb = traceback.format_exc()
 			print(tb)
 
-	### command 2
-	@commands.has_permissions(administrator=True)
-	@commands.hybrid_command(name='del_key_redis', brief="Deletar uma chave do servidor Redis")
-	@commands.cooldown(1, 30, commands.BucketType.user)
-	@is_bot_owner
-	@app_commands.guilds(MY_GUILD_ID)
-	async def del_key_redis_command(self, ctx, key: str):
-		await ctx.defer(ephemeral=True)
-		await self.bot.redis.delete(key)
-		await ctx.send(f"> A chave {key} foi deletada com sucesso! ✅")
-
-	### command 3
-	@commands.has_permissions(administrator=True)
-	@commands.hybrid_command(name='clear_all_redis', brief="Apaga o banco de dados atual do servidor Redis")
-	@commands.cooldown(1, 30, commands.BucketType.user)
-	@is_bot_owner
-	@app_commands.guilds(MY_GUILD_ID)
-	async def clear_all_redis_command(self, ctx):
-		await ctx.defer(ephemeral=True)
-		await self.bot.redis.flushdb()  # apaga o banco de dados atual ou self.bot.redis.flushall() para pagar todos
-		await ctx.send(f"> O banco de dados foi resetado! ✅")
-
-	# COMANDOS DE PAGAMENTO E BANCO DE DADOS MYSQL
-	### command 5
-	@commands.has_permissions(administrator=True)
-	@commands.hybrid_command(name='verificar_pagamento')
-	@commands.cooldown(1, 30, commands.BucketType.user)
-	@is_bot_owner
-	@discord.app_commands.describe(ordem_id="Ordem do pagamento")
-	@app_commands.guilds(MY_GUILD_ID)
-	async def verificar_pagamento_command(self, ctx, ordem_id: str):
-		"""Verificar o estado de uma transação usando a ordem de pagamento"""
-		await ctx.defer(ephemeral=True)
-
-		payment_status = await self.bot.PAYPAL.check_payment_status(ordem_id)
-
-		if payment_status:
-			msg = data_options["payments_messages"]["order_status_success"]
-			await ctx.send(
-				content=f'{msg} ✅'.format(ordem_id)
-			)
-		else:
-			msg = data_options["payments_messages"]["order_status_error"]
-			await ctx.send(
-				content=f'{msg} ❌'.format(ordem_id)
-			)
-
-	### command 7
-	@commands.has_permissions(administrator=True)
-	@is_bot_owner
-	@commands.hybrid_command(name='deletar_todas_tabelas_pagamentos')
-	@commands.cooldown(1, 30, commands.BucketType.user)
-	@app_commands.guilds(MY_GUILD_ID)
-	async def deletar_todas_tabelas_pagamentos_command(self, ctx):
-		"""Deletar a tabela de pagamentos!"""
-		await ctx.defer(ephemeral=True)
-		guild_id = ctx.guild_id
-		self.bot.MYSQL.delete_payments_table(table_name=str(guild_id))
-
-		msg = data_options["mysql_messages"]["delete_table_success"]
-		await ctx.send(
-			f'{msg} ✅'.format(guild_id)
-		)
-
-	### command 8
-	@commands.has_permissions(administrator=True)
-	@is_bot_owner
-	@commands.hybrid_command(name='resetar_tabelas_pagamentos')
-	@commands.cooldown(1, 30, commands.BucketType.user)
-	@app_commands.guilds(MY_GUILD_ID)
-	async def resetar_tabelas_pagamentos_payments_command(self, ctx):
-		"""Limpar a tabela de pagamentos pendentes"""
-		await ctx.defer(ephemeral=True)
-		guild_id = ctx.guild_id
-		self.bot.MYSQL.clear_payments_table(table_name=str(guild_id))
-
-		msg = data_options["mysql_messages"]["clear_table_payments"]
-		await ctx.send(
-			content=f'{msg}'.format(guild_id)
-		)
-
-	### command 8
-	@commands.has_permissions(administrator=True)
-	@is_bot_owner
-	@commands.hybrid_command(name='configurar_idioma')
-	@commands.cooldown(1, 30, commands.BucketType.user)
-	@app_commands.guilds(MY_GUILD_ID)
-	async def configurar_idioma_command(self, ctx, language: typing.Literal['Português', 'English']):
-		"""Definir o idioma do bot"""
-		await ctx.defer(ephemeral=True, thinking=True)
-		if language == "Português":
-			language_ = "pt-br"
-		elif language == "English":
-			language_ = "en-us"
-		else:
-			language_ = "pt-br"
-
-		guild_id = ctx.guild_id
-		table_name = 'lan' + str(guild_id)
-
-		msg = data_options["bot_configs"]["set_language"]
-		await ctx.send(
-			f'{msg}'.format(language)
-		)
-
-	# command 10
-	@commands.hybrid_command(name="criar_convite", brief="Criar Convite")
+	# command 3
+	@commands.hybrid_command(name="create_invite", brief="Create Invitation")
 	@commands.has_permissions(administrator=True)
 	@commands.cooldown(1, 30, commands.BucketType.user)
 	async def create_invite(
@@ -241,11 +136,11 @@ class Commands(commands.Cog):
 			f"🔗 Link para este canal: {invite.url}"
 		)
 
-	# command 11
+	# command 4
 	@commands.hybrid_command(name="gerar_token", brief="Gerar Token")
 	@commands.has_permissions(administrator=True)
 	@commands.cooldown(1, 30, commands.BucketType.user)
-	async def create_invite(
+	async def gerar_token(
 			self, ctx, characters=50, case_sensitivity=False, upper_case=False
 	):
 		"""Gerador de Tokens"""
@@ -269,4 +164,4 @@ class Commands(commands.Cog):
 		)
 
 async def setup(bot: commands.Bot) -> None:
-	await bot.add_cog(Commands(bot), guild=MY_GUILD_ID)
+	await bot.add_cog(GeneralCommands(bot), guild=MY_GUILD_ID)

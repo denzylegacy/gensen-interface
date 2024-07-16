@@ -28,19 +28,16 @@ data_options = JSONHandler().read_options_json("./infra/options.json")
 
 
 class Disc0rd(commands.Bot):
-    """GenDisc0rdsen
+    """Disc0rd
     """
     def __init__(self, *, intents: discord.Intents, application_id: int):
         super().__init__(command_prefix=data_options["bot_configs"]["prefix"], intents=intents,
                          application_id=application_id)
-        self.remove_command("help")
-        # self.help_command = HelpCommand()
 
     async def setup_hook(self):
         cogs = [
             'sources.commands.commands',
-            # 'sources.reactions',
-            # 'sources.automations.tasks',
+            'sources.tasks.tasks',
         ]
 
         for cog in cogs:
@@ -50,38 +47,14 @@ class Disc0rd(commands.Bot):
     async def on_ready(self):
         await self.change_presence(
             activity=discord.Activity(
-                type=ActivityType.watching,
-                name="Trading"
+                type=ActivityType.playing, name="Trading"
             )
         )
-
-        try:
-            for guild in self.guilds:
-                table_name = str(guild.id)
-
-        except Exception as erro:
-            log.error(f"ERROR: {erro}")
-            tb = traceback.format_exc()
-            log.error(tb)
 
         log.info(f"Client logged in as {self.user} ID: {self.user.id}")
 
     async def on_message(self, message: Message, /) -> None:
-        channel_trading: int = 1262569655222927371
-
-        if int(message.channel.id) == channel_trading:
-            if message.content.startswith("/trad"):
-                await self.process_commands(message)
-
-            elif message.author != self.user:
-                await asyncio.sleep(0.3)
-                await message.delete()
-        else:
-            if message.content.startswith("/"):
-                await self.process_commands(message)
-
-            elif message.content.startswith("l!"):
-                await self.process_commands(message)
+        await self.process_commands(message)
 
     async def on_command_error(self, ctx, error):
         await ctx.defer(ephemeral=True)
@@ -119,14 +92,12 @@ class Disc0rd(commands.Bot):
             log_channel = ctx.guild.get_channel(
                 data_options["bot_configs"]["channel_bot_erro"])  # Canal de logs de erros
 
-            traceback_message = ''.join(traceback.format_exception(None, error, error.__traceback__))
+            traceback_message = "".join(traceback.format_exception(None, error, error.__traceback__))
             await log_channel.send(f'> **Unexpected error:**\n```\n{traceback_message}\n```')
 
 
-disc0rd: object = Disc0rd(intents=intents, application_id=data_options["bot_configs"]["client_id"])
-
-
 async def main():
+    disc0rd: object = Disc0rd(intents=intents, application_id=data_options["bot_configs"]["client_id"])
     async with disc0rd:
         await disc0rd.start(DISCORD_TOKEN)
 
