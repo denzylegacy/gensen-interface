@@ -183,8 +183,8 @@ class GeneralCommands(commands.Cog):
 
 		if not user_data:
 			self.json_db.create(
-				collection="users", 
-				doc=str(ctx.author.id), 
+				collection="users",
+				doc=str(ctx.author.id),
 				attributes=[{asset_id: price_for_btc_usd_brl}]
 			)
 

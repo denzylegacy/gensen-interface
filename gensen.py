@@ -24,8 +24,18 @@ class ゲンセン:
     a purchase notification is made
     """
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self) -> tuple | None:
+        self.profit: int = 5
+    
+    def engine(
+            self, base_asset_value: int, previous_asset_value: int, current_asset_value: int
+        ) -> tuple:
+        value_difference: int = (previous_asset_value * base_asset_value) / current_asset_value
+
+        if value_difference >= self.profit:
+          return value_difference, True
+        else:
+            return value_difference, False
 
 
 if __name__ == "__main__":
