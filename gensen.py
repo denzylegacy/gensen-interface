@@ -1,7 +1,7 @@
 from pprint import pprint
 
 from infra import log
-from coingecko import Coingecko
+from api.coingecko import Coingecko
 
 
 class ゲンセン:

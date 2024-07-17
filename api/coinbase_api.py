@@ -3,10 +3,11 @@
 import jwt
 from cryptography.hazmat.primitives import serialization
 import time
+import uuid
+import math
 import secrets
-from coinbase.rest import RESTClient
 from json import dumps
-
+from coinbase.rest import RESTClient
 from dotenv import load_dotenv, set_key
 from infra import log, COINBASE_VIEW_API_KEY_NAME, COINBASE_VIEW_API_KEY_PRIVATE_KEY
 
@@ -16,7 +17,6 @@ load_dotenv()
 class CoinbaseAuth():
     """CoinbaseAuth
     """
-
     def __init__(self) -> None:
         self.request_method: str = "GET"
         self.request_host: str = "api.coinbase.com"
@@ -51,11 +51,12 @@ class CoinbaseAuth():
         log.info("JWT TOKEN WAS BEEN CREATED!")
 
     
-class Coinbase():
+class Coinbase(CoinbaseAuth):
     """Coinbase
+    doc: https://docs.cdp.coinbase.com/advanced-trade/docs/sdk-rest-client-trade
     """
     def __init__(self) -> None:
-        self.auth = CoinbaseAuth().auth()
+        super().__init__()
         self.client = RESTClient(
             api_key=COINBASE_VIEW_API_KEY_NAME,
             api_secret=COINBASE_VIEW_API_KEY_PRIVATE_KEY
@@ -74,8 +75,62 @@ class Coinbase():
                     return account
         return None
 
+    def asset_data(self, asset: str) -> dict | None:
+        accounts = self.client.get_accounts()
+
+        if accounts:
+            for account in accounts["accounts"]:
+                if account["currency"] == asset:
+                    return account
+        return None
+
+    def placing_market_order(
+            self, base_currency: str = "BTC", quote_currency: str = "BRL",
+            quote_size: int = 1,
+        ) -> dict:
+        order = self.client.market_order_buy(
+            client_order_id=str(uuid.uuid4())[:8],
+            product_id=f"{base_currency}-{quote_currency}",
+            quote_size=str(quote_size)
+        )
+
+        fills = self.client.get_fills(order_id=order["order_id"])
+        return dumps(fills, indent=2)
+
+    def placing_limit_buy_order(
+            self, base_currency: str = "BTC", quote_currency: str = "BRL",
+    ) -> str:
+        product = self.client.get_product(f"{base_currency}-{quote_currency}")
+
+        btc_usd_price = float(product["price"])
+
+        adjusted_btc_usd_price = str(math.floor(btc_usd_price - (btc_usd_price * 0.05)))
+
+        return adjusted_btc_usd_price
+    
+    def placing_order_5_percent_below_price(
+            self, base_currency: str = "BTC", quote_currency: str = "BRL",
+            quote_size: str = "0.0002",
+    ):
+        adjusted_btc_usd_price = self.placing_limit_buy_order(
+            base_currency=base_currency, quote_currency=quote_currency
+        )
+
+        limit_order = self.client.limit_order_gtc_buy(
+            client_order_id=str(uuid.uuid4())[:8],
+            product_id=f"{base_currency}-{quote_currency}",
+            base_size=quote_size,
+            limit_price=adjusted_btc_usd_price
+        )
+
+        return limit_order["order_id"]
+
+    def cancelling_the_order(self, limit_order_id):
+        return self.client.cancel_orders(order_ids=[limit_order_id])
+
 
 if __name__ == "__main__":
     coinbase = Coinbase()
     # print(coinbase.client_accounts())
-    print(coinbase.account_balance_in_brl())
+    # print(coinbase.account_balance_in_brl())
+    print(coinbase.asset_data(asset="NEAR"))

@@ -5,7 +5,7 @@ import datetime
 import pytz
 from pathlib import Path
 
-from coingecko import Coingecko
+from api.coingecko import Coingecko
 from gensen import ゲンセン
 from crud import JsonDB
 from infra.settings import BASE_PATH
