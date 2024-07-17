@@ -30,28 +30,28 @@ class Monitoring(commands.Cog):
             pytz.timezone("America/Sao_Paulo")
         ).strftime("%d-%m-%Y às %H:%M:%S")
 
-        print(date_time)
+        # print(date_time)
 
-        price_for_btc_usd_brl: dict = self.coingecko.coin_current_price_for_btc_usd_brl(
-            coind_id="bitcoin"
-        )
+        # price_for_btc_usd_brl: dict = self.coingecko.coin_current_price_for_btc_usd_brl(
+        #     coind_id="bitcoin"
+        # )
 
-        users = self.json_db.read(collection="users")
+        # users = self.json_db.read(collection="users")
 
-        if users:
-            for user in users.keys():
-                user_data = self.json_db.read(collection="users", doc=str(user))
+        # if users:
+        #     for user in users.keys():
+        #         user_data = self.json_db.read(collection="users", doc=str(user))
 
-                value_difference, sell = self.gensen.engine(
-                    base_asset_value=user_data["bitcoin"]["base"], 
-                    previous_asset_value=user_data["bitcoin"]["brl"],
-                    current_asset_value=price_for_btc_usd_brl["brl"]
-                )
+        #         value_difference, sell = self.gensen.engine(
+        #             base_asset_value=user_data["bitcoin"]["base"], 
+        #             previous_asset_value=user_data["bitcoin"]["brl"],
+        #             current_asset_value=price_for_btc_usd_brl["brl"]
+        #         )
 
-                print("difference:", value_difference)
+        #         print("difference:", value_difference)
 
-                if sell:
-                    print("Vender!")
+        #         if sell:
+        #             print("Vender!")
         await asyncio.sleep(3)
     
 

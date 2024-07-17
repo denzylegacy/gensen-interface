@@ -171,77 +171,101 @@ class GeneralCommands(commands.Cog):
 	@commands.hybrid_command(name="add_asset", brief="(Gensen) Add asset")
 	@commands.cooldown(1, 5, commands.BucketType.user)
 	@commands.has_permissions(administrator=True)
-	async def add_asset(
-			self, ctx, asset_id="ethereum", amount_invested=100
-	):
+	async def add_asset(self, ctx):
 		"""(Gensen) Add asset"""
-		await ctx.defer(ephemeral=False)
 
-		price_for_btc_usd_brl: dict = self.coingecko.coin_current_price_for_btc_usd_brl(coind_id=asset_id)
+		try:
+			assert ctx.guild is not None
+			from sources.buttons.register_button import AssetRegistrationButton
+			from sources.embeds import CustomEmbed
 
-		user_data = self.json_db.read(collection="users", doc=str(ctx.author.id))
-
-		if not user_data:
-			self.json_db.create(
-				collection="users",
-				doc=str(ctx.author.id),
-				attributes=[{asset_id: price_for_btc_usd_brl}]
+			embed = (CustomEmbed(None, data_options["forms"]["register_asset"])
+				.set_image("https://i.imgur.com/wlLmdW9.gif")
+				# https://i.imgur.com/9df8CxP.gif
+				# https://i.imgur.com/oDIA7hz.gif
+				# https://i.imgur.com/isuZQ31.gif
+				# https://i.imgur.com/Pj2dF4w.gif
+				# https://i.imgur.com/8Kop1Lt.gif
+				# https://i.imgur.com/dbSES5Z.gif
+				# https://i.imgur.com/tKrQjIA.gif
+				# https://i.imgur.com/fvQcI5h.mp4
+				# https://i.imgur.com/WmqMqNG.png
+				.create_embed()
 			)
 
-			embed = discord.Embed(
-				title="Asset Addition",
-				color=0xffa07a
-			)
+			await ctx.send(embed=embed, view=AssetRegistrationButton(), ephemeral=True)
+			return False
+		except Exception as e:
+			print(f"An error occurred: {e}")
+			tb = traceback.format_exc()
+			print(tb)
+		# await ctx.defer(ephemeral=False)
 
-			embed.add_field(
-				name="",
-				value=f"User ID: {ctx.author.id}",
-				inline=False
-			)
+		# price_for_btc_usd_brl: dict = self.coingecko.coin_current_price_for_btc_usd_brl(coind_id=asset_id)
 
-			embed.add_field(
-				name="Asset",
-				value=asset_id,
-			)
+		# user_data = self.json_db.read(collection="users", doc=str(ctx.author.id))
 
-			embed.add_field(
-				name="Amount",
-				value=f"R${amount_invested}",
-			)
+		# if not user_data:
+		# 	self.json_db.create(
+		# 		collection="users",
+		# 		doc=str(ctx.author.id),
+		# 		attributes=[{asset_id: price_for_btc_usd_brl}]
+		# 	)
 
-			embed.add_field(
-				name=f"Success!",
-				value="The asset and value have been set!",
-				inline=False
-			)
+		# 	embed = discord.Embed(
+		# 		title="Asset Addition",
+		# 		color=0xffa07a
+		# 	)
 
-			embed.set_author(name=self.bot.user.name, icon_url=self.bot.user.avatar.url)
-			embed.set_footer(
-				text=f"Asset added with ♥ by {self.bot.user.name} - "
-						f"Copyright © 2023",
-				icon_url=self.bot.user.avatar.url)
+		# 	embed.add_field(
+		# 		name="",
+		# 		value=f"User ID: {ctx.author.id}",
+		# 		inline=False
+		# 	)
 
-			await ctx.send(embed=embed)
-		else:
-			embed = discord.Embed(
-				title="Asset Addition",
-				description="",
-				color=0xffa07a
-			)
+		# 	embed.add_field(
+		# 		name="Asset",
+		# 		value=asset_id,
+		# 	)
 
-			embed.add_field(
-				name=f"Warning!",
-				value="This asset has already been linked by you before!",
-				inline=False
-			)
+		# 	embed.add_field(
+		# 		name="Amount",
+		# 		value=f"R${amount_invested}",
+		# 	)
 
-			embed.set_author(name=self.bot.user.name, icon_url=self.bot.user.avatar.url)
-			embed.set_footer(
-				text=f"{self.bot.user.name} - "
-						f"Copyright © 2024",
-				icon_url=self.bot.user.avatar.url)
+		# 	embed.add_field(
+		# 		name=f"Success!",
+		# 		value="The asset and value have been set!",
+		# 		inline=False
+		# 	)
 
-			await ctx.send(embed=embed)
+		# 	embed.set_author(name=self.bot.user.name, icon_url=self.bot.user.avatar.url)
+		# 	embed.set_footer(
+		# 		text=f"Asset added with ♥ by {self.bot.user.name} - "
+		# 				f"Copyright © 2023",
+		# 		icon_url=self.bot.user.avatar.url)
+
+		# 	await ctx.send(embed=embed)
+		# else:
+		# 	embed = discord.Embed(
+		# 		title="Asset Addition",
+		# 		description="",
+		# 		color=0xffa07a
+		# 	)
+
+		# 	embed.add_field(
+		# 		name=f"Warning!",
+		# 		value="This asset has already been linked by you before!",
+		# 		inline=False
+		# 	)
+
+		# 	embed.set_author(name=self.bot.user.name, icon_url=self.bot.user.avatar.url)
+		# 	embed.set_footer(
+		# 		text=f"{self.bot.user.name} - "
+		# 				f"Copyright © 2024",
+		# 		icon_url=self.bot.user.avatar.url)
+
+		# 	await ctx.send(embed=embed)
 
 
 async def setup(bot: commands.Bot) -> None:

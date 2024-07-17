@@ -34,30 +34,14 @@
         "channel_trading": 1262569655222927371,
         "channel_trading_log": 1262569988611506227
     },
-     "payments_messages": {
-         "no_perms": "O bot não possui permissões para criar ou modificar cargos!",
-         "success": "O pagamento de ordem `{0}` do {1} (Nome: {2} e ID: {3}) de R${4} foi recebido com sucesso!",
-         "payment_error": "Houve um erro ao processar a compra!",
-         "order_payment": "O membro {0} (ID:`{1}`), comprou o produto de ordem `{2}` no valor de `R${3}`! Caso o cliente tenha enfrentado algum erro envie o link abaixo para ele continuar comprando:\n{4}!",
-         "warning_payment": "Você está comprando R${0} e sua ordem é `{1}`!",
-         "order_status_success": "O pagamento de ordem {0} foi recebido!",
-         "order_status_error": "O pagamento de ordem {0} ainda não foi recebido!"
-     },
-     "mysql_messages": {
-         "delete_table_success": "A tabela {0} foi deletada com sucesso!",
-         "clear_table_payments": "O tabela {0} foi resetada com sucesso!"
-     },
      "general_cmd": {
          "sync_error_semicolon": "Você precisa separar com ';' (ponto e vírgula)!"
-     },
-     "paypal": {
-         "return_url": "https://discord.gg/VzttVEV8xK",
-         "cancel_url": "https://discord.gg/VzttVEV8xK",
-         "accepted_currencies": ["BRL", "USD", "EUR"],
-         "currency_code": "BRL"
      },
      "decorators": {
         "warning_owner": "Somente os desenvolvedores do Gensen podem executar este comando!",
         "bot_owners": [1011675274112401500]
+     },
+     "forms": {
+        "register_asset":"Hey, if you really want to register a new asset, click **confirm**!"
      }
  }

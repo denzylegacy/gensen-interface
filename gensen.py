@@ -17,8 +17,8 @@ class ゲンセン:
     Considerations:
     * It must be necessary to input the assets and values for the assets
     for each sale, the machine must request confirmation of the sale, as long as the Coinbase API is not implemented
-    This is to avoid problems (I'm sorry and I'm not going to explain them now...)
-
+    This is to avoid problems (I'm in a hurry and I'm not going to explain them now...)
+    
     * The user must be notified when to make the sale and purchase, and which assets
     * Create a watch list, so as soon as an asset falls below a certain percentage,
     a purchase notification is made
