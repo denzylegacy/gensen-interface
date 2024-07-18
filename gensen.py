@@ -39,7 +39,7 @@ class ゲンセン:
             return value_difference, False
 
     def convert_asset_to_brl(
-            self, asset: str = None, brl_asset: int = None, available_balance: float = None
+            self, asset: str = None, brl_asset: int = None, available_balance_brl: float = None
         ) -> float:
         if not brl_asset:
             asset_data = Coingecko().coin_data_by_id(coind_id=asset)
@@ -49,9 +49,9 @@ class ゲンセン:
           
             brl_asset: int = asset_data["market_data"]["current_price"]["brl"]
 
-        available_balance_brl = float(available_balance) * int(brl_asset)
+        _available_balance_brl = float(available_balance_brl) * int(brl_asset)
 
-        return round(available_balance_brl, 3)
+        return round(_available_balance_brl, 3)
 
     def user_asset_validator(self, asset: str) -> dict:
         asset_data = Coingecko().coin_data_by_id(coind_id=asset)

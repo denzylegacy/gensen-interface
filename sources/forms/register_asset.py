@@ -86,7 +86,7 @@ class AssetRegistration(Modal, title="Asset registration"):
 				asset_available_value_brl: float = ゲンセン().convert_asset_to_brl(
 					asset=self.asset.value,
 					brl_asset=client_asset_data["brl"],
-					available_balance=client_asset_data["available_balance"]
+					available_balance_brl=client_asset_data["available_balance"]
 				)
 
 				timestamp = datetime.datetime.now(
@@ -96,8 +96,8 @@ class AssetRegistration(Modal, title="Asset registration"):
 				connection.child(f"users/{interaction.user.id}/assets/{self.asset.value}").update(
 					{
 						"name": self.asset.value,
-						"available_balance_brl": float(client_asset_data["available_balance"]),
-						f"available_balance_{self.asset.value.lower()}": asset_available_value_brl,
+						f"available_balance_{self.asset.value.lower()}": float(client_asset_data["available_balance"]),
+						"available_balance_brl": asset_available_value_brl,
 						"base_balance": float(self.base_balance.value),
 						"fixed_profit_brl": float(self.fixed_profit_brl.value),
 						"brl": client_asset_data["brl"],
@@ -109,8 +109,8 @@ class AssetRegistration(Modal, title="Asset registration"):
 
 				resp = (
 					f"Asset: {self.asset.value.upper()}\n"
-					f"Your Available Balance (BRL): {client_asset_data["available_balance"]}\n"
-					f"Your Available Balance ({self.asset.value}): {asset_available_value_brl}\n"
+					f"Your Available Balance: {client_asset_data["available_balance"]}\n"
+					f"Your Available Balance (BRL)({self.asset.value}): {asset_available_value_brl}\n"
 					f"Base Balance (BRL): {self.base_balance.value}\n"
 					f"Fixed Profit (BRL): {self.fixed_profit_brl.value}"
 				)
