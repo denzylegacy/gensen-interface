@@ -69,20 +69,18 @@ class Logger:
     def log(self, msg: str, lvl: LogLevel = LogLevel.INFO) -> None:
         return self.logging.log(lvl.value, msg)
 
-    def log_func(self, arg: str = "") -> Callable:
+    def function_log(self, arg: str = "") -> Callable:
         def decorator(func: Callable) -> Callable:
             def wrapper(*args, **kwargs):
                 base_msg = (
-                    f"[{arg}.{func.__name__}]"
-                    if isinstance(arg, str)
-                    else f"[{func.__name__}]"
+                    f"[{arg}.{func.__name__}]" if isinstance(arg, str) else f"[{func.__name__}]"
                 )
                 try:
                     self.info(f'{base_msg} STARTED IN: "{datetime.now()}"')
                     self.info(
-                        f'{base_msg} FUNCTION ARGUMENTS: {args=} {kwargs=}'
+                        f'{base_msg} function arguments: {args=} {kwargs=}'
                     )
-                    self.info(f"{base_msg} FUNCTION RESULT: {func(*args, **kwargs)!r}")
+                    self.info(f"{base_msg} function return: {func(*args, **kwargs)!r}")
                     self.info(f'{base_msg} FINISHED IN: "{datetime.now()}"')
                     return func(*args, **kwargs)
                 except Exception as error:
@@ -111,11 +109,6 @@ class Logger:
         self.log(msg, LogLevel.ERROR)
 
 
-# if __name__ == "__main__":
 log = Logger(
     lvl=LogLevel.DEBUG, terminal_level=LogLevel.INFO
 )
-
-# log.log("FATAL ERROR EXPERIMENTAL", LogLevel.CRITICAL)
-# log.critical("Critical experimental!")
-# @log.log_func("Debug experimental")

@@ -13,6 +13,7 @@ class Coingecko:
             self.coingecko_api_url: str = "https://api.coingecko.com/api/v3"
             self.coingecko_api_key: str = COINGECKO_API_KEY
 
+    @log.function_log()
     def auth(self) -> int:
         headers = {
             "accept": "application/json", "x-cg-api-key": self.coingecko_api_key
@@ -21,12 +22,12 @@ class Coingecko:
         response = requests.get(url=f"{self.coingecko_api_url}/ping", headers=headers)
 
         if response.status_code == 200:
-            log.info(response.json())
             return response.status_code
         else:
             log.error(f"{response.status_code}, {response.text}")
             return response.status_code
 
+    @log.function_log()
     def coins_list(self) -> str:
         headers: dict = {
             "accept": "application/json", "x-cg-api-key": self.coingecko_api_key
@@ -38,7 +39,7 @@ class Coingecko:
 
         return response.json()
 
-    def coin_data_by_id(self, coind_id: str) -> dict:
+    def coin_data_by_id(self, coind_id: str) -> dict | None:
         headers: dict = {
             "accept": "application/json", "x-cg-api-key": self.coingecko_api_key
         }
@@ -47,15 +48,25 @@ class Coingecko:
             url=f"{self.coingecko_api_url}/coins/{coind_id}", headers=headers
         )
 
-        return response.json()
+        if int(str(response.status_code)[0]) == 2:
+            return response.json()
+        log.error(f"[coin_data_by_id] {response.status_code}: {response.text}")
+        return
 
-    def coin_market_data(self, coind_id: str):
-        coin_data: dict = self.coin_data_by_id(coind_id=coind_id)
-        return coin_data["market_data"]
+    def coin_market_data(self, coind_id: str) -> dict | None:
+        coin_data = self.coin_data_by_id(coind_id=coind_id.strip().lower())
 
-    def coin_current_price_for_btc_usd_brl(self, coind_id: str) -> dict:
+        if coin_data:
+            return coin_data["market_data"]
+        return
+
+    @log.function_log()
+    def coin_current_price_for_btc_usd_brl(self, coind_id: str) -> None | dict:
         coin_data = self.coin_data_by_id(coind_id=coind_id)
 
+        if not coin_data:
+            return
+        
         btc: int = coin_data["market_data"]["current_price"]["btc"]
         usd: int = coin_data["market_data"]["current_price"]["usd"]
         brl: int = coin_data["market_data"]["current_price"]["brl"]
@@ -66,6 +77,7 @@ class Coingecko:
             "btc": btc, "usd": usd, "brl": brl
         }
 
+    @log.function_log()
     def get_token_info(self) -> dict:
         token_id: str = ""
         url = f"{self.coingecko_api_url}/simple/token_price/{token_id}"
@@ -81,7 +93,7 @@ if __name__ == "__main__":
     coingecko: object = Coingecko()
 
     # coingecko.auth()
-    print(coingecko.coins_list())
-    # pprint(coingecko.coin_data_by_id(coind_id="bitcoin"))
-    # coingecko.coin_market_data(coind_id="bitcoin")
+    # print(coingecko.coins_list())
+    # print(coingecko.coin_data_by_id(coind_id="bitcoin"))
+    # print(coingecko.coin_market_data(coind_id="bitcoin"))
     # coingecko.coin_current_price_for_btc_usd_brl(coind_id="bitcoin")

@@ -5,6 +5,8 @@ from utils.utils import Utilities
 from local_io import JSONHandler
 from firebase import Firebase
 from infra import log
+from api.coingecko import Coingecko
+from gensen import ゲンセン
 
 textstyle = Utilities().textstyle
 data_options = JSONHandler().read_options_json("./../infra/options.json")
@@ -13,7 +15,7 @@ data_options = JSONHandler().read_options_json("./../infra/options.json")
 class AssetRegistration(Modal, title="Asset registration"):
 
 	asset = TextInput(
-		label="Asset Acronym",
+		label="Asset Name",
 		placeholder="(Mandatory)",
 		required=True,
 		max_length=15
@@ -35,40 +37,76 @@ class AssetRegistration(Modal, title="Asset registration"):
 
 	async def on_submit(self, interaction: discord.Interaction):
 		await interaction.response.defer()
-
-        # Search for the Asset on Coingecko and validate its existence
-
-		resp = (
-			f"Asset: {self.asset.value}\n"
-			f"Base Balance (BRL): {self.base_balance.value}\n"
-			f"Fixed Profit (BRL): {self.fixed_profit_brl.value}"
-		)
-
-		embed = discord.Embed(title="", description=resp, color=0x6AA84F)
-
-		embed.add_field(name="", value=f"Your asset has been registered successfully!", inline=False)
-
-		firebase = Firebase()
-		# system_user_var = connection.child(f"{interaction.user.id}").get()
-
-		# if system_user_var:
 		
-		connection = firebase.firebase_connection("users")
-		connection.child(f"{interaction.user.id}/assets/{self.asset.value}").update(
-            {
-                "asset_name": "bitcoin",
-                "available_balance": 0.00141621,
-                "base_balance": 100,
-                "brl": 498,
-                "usd": 93.77,
-            }
-        )
-		log.info(f"+ {self.asset.value} - {interaction.user.name} ({interaction.user.id})")
-		await interaction.followup.send(embed=embed, ephemeral=True)
-        
-		# else:
-		# 	await interaction.followup.send("Hey! Your username is not in my database!", ephemeral=True)
+		asset_data = Coingecko().coin_market_data(coind_id=self.asset.value)
 
+		if not asset_data:
+			embed = discord.Embed(
+				title="Watch out!",
+				description=f"The **{self.asset.value}** asset is **not** listed on Coingecko!!",
+				color=0xffa07a
+			)
+			embed.add_field(
+				name="", 
+				value="Please check whether the information you entered is correct. If you believe this is a bug, please contact my developer!",
+				inline=False
+			)
+			await interaction.followup.send(embed=embed, ephemeral=True)
+		else:
+			firebase = Firebase()
+			
+			connection = firebase.firebase_connection("users")
+
+			user_assets = connection.child(
+				f"{interaction.user.id}/assets"
+			).get()
+
+			if not self.asset.value in user_assets.keys():
+				client_asset_data: dict = ゲンセン().user_asset_validator(asset=self.asset.value)
+				
+				asset_available_value_brl: float = ゲンセン().convert_asset_to_brl(
+					asset=self.asset.value,
+					brl_asset=client_asset_data["brl"],
+					available_balance=client_asset_data["available_balance"]
+				)
+				
+				connection.child(f"{interaction.user.id}/assets/{self.asset.value}").update(
+					{
+						"name": self.asset.value,
+						"available_balance_brl": client_asset_data["available_balance"],
+						f"available_balance_{self.asset.value.lower()}": asset_available_value_brl,
+						"base_balance": self.base_balance.value,
+						"brl": client_asset_data["brl"],
+						"usd": client_asset_data["usd"],
+					}
+				)
+				log.info(f"+ {self.asset.value.upper()} -> {interaction.user.name} ({interaction.user.id})")
+
+				resp = (
+					f"Asset: {self.asset.value.upper()}\n"
+					f"Your Available Balance (BRL): {client_asset_data["available_balance"]}\n"
+					f"Your Available Balance ({self.asset.value}): {asset_available_value_brl}\n"
+					f"Base Balance (BRL): {self.base_balance.value}\n"
+					f"Fixed Profit (BRL): {self.fixed_profit_brl.value}"
+				)
+
+				embed = discord.Embed(title="Successfully registered!", description=resp, color=0x6AA84F)
+				embed.add_field(name="", value=f"Your asset has been registered successfully!", inline=False)
+
+				await interaction.followup.send(embed=embed, ephemeral=True)
+			else:
+				embed = discord.Embed(
+					title="Watch out!",
+					description=f"The **{self.asset.value}** asset **is** already linked to your account!!",
+					color=0xffa07a
+				)
+				embed.add_field(
+					name="", 
+					value="Please check whether the information you entered is correct. If you believe this is a bug, please contact my developer!",
+					inline=False
+				)
+				await interaction.followup.send(embed=embed, ephemeral=True)
+	
 	async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
 		await interaction.response.send_message(
 			f"An error occurred while processing your information: {error}", ephemeral=True

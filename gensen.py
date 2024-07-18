@@ -2,6 +2,7 @@ from pprint import pprint
 
 from infra import log
 from api.coingecko import Coingecko
+from api.coinbase_api import Coinbase
 
 
 class ゲンセン:
@@ -33,10 +34,50 @@ class ゲンセン:
         value_difference: int = (previous_asset_value * base_asset_value) / current_asset_value
 
         if value_difference >= self.profit:
-          return value_difference, True
+            return value_difference, True
         else:
             return value_difference, False
 
+    def convert_asset_to_brl(
+            self, asset: str = None, brl_asset: int = None, available_balance: float = None
+        ) -> float:
+        if not brl_asset:
+            asset_data = Coingecko().coin_data_by_id(coind_id=asset)
+
+            if not asset_data:
+                return
+          
+            brl_asset: int = asset_data["market_data"]["current_price"]["brl"]
+
+        available_balance_brl = float(available_balance) * int(brl_asset)
+
+        return round(available_balance_brl, 3)
+
+    def user_asset_validator(self, asset: str) -> dict:
+        asset_data = Coingecko().coin_data_by_id(coind_id=asset)
+
+        if not asset_data:
+            return
+        
+        usd: int = asset_data["market_data"]["current_price"]["usd"]
+        brl: int = asset_data["market_data"]["current_price"]["brl"]
+
+        client_asset_data: dict = Coinbase().asset_data(currency=asset_data["symbol"])
+
+        asset_available_balance = client_asset_data["available_balance"]["value"]
+
+        return {
+            "available_balance": asset_available_balance, "brl": brl, "usd": usd,
+        }
 
 if __name__ == "__main__":
     gensen: object = ゲンセン()
+
+    # print(gensen.user_asset_validator(asset="bitcoin"))
+
+    print(
+        gensen.convert_asset_to_brl(
+            # asset="bitcoin", brl_asset=354449, available_balance=0.00139909
+            asset="bitcoin", brl_asset=353241, available_balance=0.00139909
+        )
+    )

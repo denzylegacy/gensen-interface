@@ -180,7 +180,8 @@ class GeneralCommands(commands.Cog):
 			from sources.embeds import CustomEmbed
 
 			embed = (CustomEmbed(None, data_options["forms"]["register_asset"])
-				.set_image("https://i.imgur.com/wlLmdW9.gif")
+				.set_image("https://cdn.pfps.gg/banners/9031-toney.gif")
+				# https://i.imgur.com/wlLmdW9.gif
 				# https://i.imgur.com/9df8CxP.gif
 				# https://i.imgur.com/oDIA7hz.gif
 				# https://i.imgur.com/isuZQ31.gif

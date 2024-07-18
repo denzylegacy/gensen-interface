@@ -75,12 +75,12 @@ class Coinbase(CoinbaseAuth):
                     return account
         return None
 
-    def asset_data(self, asset: str) -> dict | None:
+    def asset_data(self, currency: str) -> dict | None:
         accounts = self.client.get_accounts()
 
         if accounts:
             for account in accounts["accounts"]:
-                if account["currency"] == asset:
+                if account["currency"] == currency.upper():
                     return account
         return None
 
@@ -131,6 +131,6 @@ class Coinbase(CoinbaseAuth):
 
 if __name__ == "__main__":
     coinbase = Coinbase()
-    # print(coinbase.client_accounts())
+    print(coinbase.client_accounts())
     # print(coinbase.account_balance_in_brl())
-    print(coinbase.asset_data(asset="NEAR"))
+    # print(coinbase.asset_data(asset="NEAR"))
