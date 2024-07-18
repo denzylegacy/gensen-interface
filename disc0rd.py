@@ -1,6 +1,5 @@
 import discord
 from discord.message import Message
-from pprint import pprint
 from dotenv import load_dotenv
 import pytz
 import asyncio
@@ -35,7 +34,7 @@ class Disc0rd(commands.Bot):
     async def setup_hook(self):
         cogs = [
             'sources.commands.commands',
-            'sources.tasks.tasks',
+            'tasks.tasks',
         ]
 
         for cog in cogs:
@@ -94,10 +93,13 @@ class Disc0rd(commands.Bot):
             await log_channel.send(f'> **Unexpected error:**\n```\n{traceback_message}\n```')
 
 
+bot = Disc0rd(intents=intents, application_id=data_options["bot_configs"]["client_id"])
+
+
 async def main():
-    disc0rd: object = Disc0rd(intents=intents, application_id=data_options["bot_configs"]["client_id"])
-    async with disc0rd:
-        await disc0rd.start(DISCORD_TOKEN)
+    async with bot:
+        bot.member_timezone = member_timezone
+        await bot.start(DISCORD_TOKEN)
 
 
 asyncio.run(main())
