@@ -1,26 +1,4 @@
 {
-    "options":  [
-         ["SUPORTE GERAL", "Dúvidas gerais e suporte.", "🌐"],
-         ["SUPORTE DE COBRANÇA", "Dúvidas sobre cobrança e pagamento.", "💰"],
-         ["SUPORTE TÉCNICO", "Problemas técnicos e assistência.", "🔧"],
-         ["SUPORTE DE CONTA", "Ajuda com a conta e configurações.", "👤"],
-         ["OUTRO", "Outras dúvidas ou problemas.", "❓"]
-     ],
-     "tickets": {
-         "title": "",
-         "description": "> Clique no ticket abaixo!\n> Obs.: não abra um ticket sem necessidade!",
-         "already_created_a_ticket": "Você já criou um ticket, então feche-o para abrir outro!"
-     },
-     "channel_ticket": {
-         "message_ticket": "> {0} Clique no botão abaixo para deletar esse ticket!",
-         "message_channel_exist": "> Você já abriu um ticket!",
-         "message_channel_deleted": "> {0} (ID: {1}) deletou o ticket {2}!",
-         "messge_ticket_deleted_press": "> {0} você deseja realmente deletar esse ticket?",
-         "dropdown_response": "Você selecionou:",
-         "dropdown_placeholder": "Escolha uma opção de ticket",
-         "ephemeral_message": "Essa mensagem é privada, então você pode deletá-la atualizando a tela (Ctrl+R) ou clicando em 'ignorar mensagem!' ✅",
-         "message_ticket_created": "Seu ticket foi criado com sucesso no canal <#{0}>! ✅"
-     },
      "bot_configs": {
         "client_id": 1205621013417693205,
         "channel_log": 1262569049900974080,
@@ -43,5 +21,28 @@
      },
      "forms": {
         "register_asset":"Hey, if you really want to register a new asset, click **confirm**!"
+     },
+     "dropdown_assets": {
+        "dropdown_placeholder": "Available options",
+        "description": "> Hey, please select one of the available options!!",
+        "dropdown": [
+            ["Add", "Add a new asset", "🈳"],
+            ["Delete", "Remove an asset", "🈲"]
+        ]
+     },
+     "tickets": {
+         "title": "",
+         "description": "> Clique no ticket abaixo!\n> Obs.: não abra um ticket sem necessidade!",
+         "already_created_a_ticket": "Você já criou um ticket, então feche-o para abrir outro!"
+     },
+     "channel_ticket": {
+         "message_ticket": "> {0} Clique no botão abaixo para deletar esse ticket!",
+         "message_channel_exist": "> Você já abriu um ticket!",
+         "message_channel_deleted": "> {0} (ID: {1}) deletou o ticket {2}!",
+         "messge_ticket_deleted_press": "> {0} você deseja realmente deletar esse ticket?",
+         "dropdown_response": "Você selecionou:",
+         "dropdown_placeholder": "Escolha uma opção de ticket",
+         "ephemeral_message": "Essa mensagem é privada, então você pode deletá-la atualizando a tela (Ctrl+R) ou clicando em 'ignorar mensagem!' ✅",
+         "message_ticket_created": "Seu ticket foi criado com sucesso no canal <#{0}>! ✅"
      }
  }

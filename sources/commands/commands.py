@@ -1,6 +1,5 @@
 import traceback
 import discord
-import typing
 from discord.ext import commands
 from typing import Optional, Literal
 from discord import app_commands
@@ -11,6 +10,9 @@ from api import Coingecko
 import secrets, string
 from crud import JsonDB
 from infra.settings import BASE_PATH
+from utils.utilities import UniqueIdGenerator
+from sources.embeds import CustomEmbed
+from sources.dropdowns import DropdownView
 
 data_options = JSONHandler(file_path="./infra/options.json").read_json()
 
@@ -141,10 +143,10 @@ class GeneralCommands(commands.Cog):
 		)
 
 	# command 3
-	@commands.hybrid_command(name="gerar_token", brief="Gerar Token")
+	@commands.hybrid_command(name="generate_token", brief="Generate Token")
 	@commands.cooldown(1, 30, commands.BucketType.user)
 	@commands.has_permissions(administrator=True)
-	async def gerar_token(
+	async def generate_token(
 			self, ctx, characters=50, case_sensitivity=False, upper_case=False
 	):
 		"""Gerador de Tokens"""
@@ -168,34 +170,48 @@ class GeneralCommands(commands.Cog):
 		)
 
 	# command 4
-	@commands.hybrid_command(name="add_asset", brief="(Gensen) Add asset")
+	@commands.hybrid_command(name="asset", brief="(Gensen) Add asset")
 	@commands.cooldown(1, 5, commands.BucketType.user)
 	@commands.has_permissions(administrator=True)
 	async def add_asset(self, ctx):
 		"""(Gensen) Add asset"""
 
 		try:
-			assert ctx.guild is not None
-			from sources.buttons.register_button import AssetRegistrationButton
-			from sources.embeds import CustomEmbed
+			await ctx.defer(ephemeral=True)
 
-			embed = (CustomEmbed(None, data_options["forms"]["register_asset"])
-				.set_image("https://cdn.pfps.gg/banners/9031-toney.gif")
-				# https://i.imgur.com/wlLmdW9.gif
-				# https://i.imgur.com/9df8CxP.gif
-				# https://i.imgur.com/oDIA7hz.gif
-				# https://i.imgur.com/isuZQ31.gif
-				# https://i.imgur.com/Pj2dF4w.gif
-				# https://i.imgur.com/8Kop1Lt.gif
-				# https://i.imgur.com/dbSES5Z.gif
-				# https://i.imgur.com/tKrQjIA.gif
-				# https://i.imgur.com/fvQcI5h.mp4
-				# https://i.imgur.com/WmqMqNG.png
+			unique_id = UniqueIdGenerator.generate_unique_custom_id()
+			options = data_options["dropdown_assets"]["dropdown"]
+
+			view = DropdownView(
+				options, 
+				dropdown_name="DropdownAssets",
+				placeholder=data_options["dropdown_assets"]["dropdown_placeholder"], 
+				custom_id_dropdown=f"dropdown_{unique_id}",
+				custom_id_button=unique_id
+			)
+			
+			embed = (
+				CustomEmbed(
+					"Asset Settings", 
+					"Through this interaction you will be able to manage your assets."
+				)
+				.set_image("https://cdn.pfps.gg/banners/4391-shirakami-fubuki-dark-background.gif")
+				# https://cdn.pfps.gg/banners/4391-shirakami-fubuki-dark-background.gif
+				# https://cdn.pfps.gg/banners/7834-shirakami-fubuki-white-background.gif
+				# https://cdn.pfps.gg/banners/1785-chainsaw-man-cinema.gif
+				# https://cdn.pfps.gg/banners/7072-makima.gif
+				# https://cdn.pfps.gg/banners/8636-gunny.gif
+				# https://cdn.pfps.gg/banners/2612-2-2-langa-banner.gif
+				# https://cdn.pfps.gg/banners/7335-eye-closeup.gif
+				# https://cdn.pfps.gg/banners/8450-nagatoro-run-high-pace.gif
+				# https://cdn.pfps.gg/banners/6611-anime-elevator.gif
+				# https://cdn.pfps.gg/banners/2042-makise-kurisu.gif
+				# https://cdn.pfps.gg/banners/6920-anime-eyes.gif
+				# https://cdn.pfps.gg/banners/5680-taiga-mad.gif
 				.create_embed()
 			)
-
-			await ctx.send(embed=embed, view=AssetRegistrationButton(), ephemeral=True)
-			return False
+			
+			await ctx.send(embed=embed, view=view, ephemeral=True)
 		except Exception as e:
 			print(f"An error occurred: {e}")
 			tb = traceback.format_exc()
