@@ -29,7 +29,6 @@ class ゲンセン:
 
     def __init__(self, user: str) -> tuple | None:
         self.user: str = user
-        self.user_credentials = self.get_user_credentials()
     
     def get_user_credentials(self):
         firebase = Firebase()
@@ -38,7 +37,7 @@ class ゲンセン:
 
         user_credentials = connection.child("users").get()
 
-        if not user_credentials or not self.user in user_credentials.keys():
+        if not user_credentials or not str(self.user) in user_credentials.keys():
             return
         
         return connection.child(
@@ -73,8 +72,11 @@ class ゲンセン:
         return round(_available_balance_brl, 3)
 
     def user_asset_validator(self, asset: str) -> dict:
+
+        user_credentials: dict = ゲンセン(user=self.user).get_user_credentials()
+
         asset_data = Coingecko(
-            coingecko_api_key=Encryptor().decrypt_api_key(self.user_credentials["coingecko_api_key"])
+            coingecko_api_key=Encryptor().decrypt_api_key(user_credentials["coingecko_api_key"])
         ).coin_data_by_id(coind_id=asset)
 
         if not asset_data:
@@ -84,8 +86,8 @@ class ゲンセン:
         brl: int = asset_data["market_data"]["current_price"]["brl"]
 
         client_asset_data: dict = Coinbase(
-            api_key=Encryptor().decrypt_api_key(self.user_credentials["coinbase_api_key_name"]),
-            api_secret=Encryptor().decrypt_api_key(self.user_credentials["coinbase_api_private_key"])
+            api_key=Encryptor().decrypt_api_key(user_credentials["coinbase_api_key_name"]),
+            api_secret=Encryptor().decrypt_api_key(user_credentials["coinbase_api_private_key"])
         ).asset_data(currency=asset_data["symbol"])
 
         asset_available_balance = client_asset_data["available_balance"]["value"]

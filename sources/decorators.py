@@ -39,9 +39,8 @@ def handle_aiohttp_errors(func):
 def authenticate():
 	async def predicate(ctx):
 		try:
+			# await ctx.defer(ephemeral=True)
 			assert ctx.guild is not None
-
-			await ctx.defer(ephemeral=True)
 			
 			firebase = Firebase()
 			
@@ -63,7 +62,7 @@ def authenticate():
 				)
 
 				await ctx.send(embed=embed, view=AuthButton(), ephemeral=True)
-				return True
+				return False
 			
 			user_credentials = connection.child(f"users/{str(ctx.author.id)}/credentials").get()
 			
@@ -79,10 +78,14 @@ def authenticate():
                 	.set_image("https://cdn.pfps.gg/banners/7834-shirakami-fubuki-white-background.gif")
                 	.create_embed()
                 )
+
 				await ctx.send(embed=embed, view=AuthButton(), ephemeral=True)
-				return True
+				return False
+			return True
 		except Exception as error:
 			print(f"ERROR: {error}")
 			tb = traceback.format_exc()
 			print(tb)
+			await ctx.send("An error occurred during authentication. Please try again later.", ephemeral=True)
+			return False
 	return commands.check(predicate)

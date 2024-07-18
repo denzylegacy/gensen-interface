@@ -76,11 +76,9 @@ class Gensen(commands.Bot):
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("> Please send all arguments! Type ``/help command`` to view the command details.",
                            ephemeral=True)
-
         elif isinstance(error, commands.CommandNotFound):
             await ctx.send("> Esse comando não existe! Use ``/help`` para ver a lista completa de comandos.",
                            ephemeral=True)
-
         elif isinstance(error, commands.MessageNotFound):
             await ctx.send("> Mensagem não encontrada 😪", ephemeral=True)
 
