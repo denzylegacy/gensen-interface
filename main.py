@@ -24,8 +24,8 @@ intents.members = True
 data_options = JSONHandler().read_options_json("./infra/options.json")
 
 
-class Disc0rd(commands.Bot):
-    """Disc0rd
+class Gensen(commands.Bot):
+    """Gensen
     """
     def __init__(self, *, intents: discord.Intents, application_id: int):
         super().__init__(command_prefix=data_options["bot_configs"]["prefix"], intents=intents,
@@ -54,7 +54,8 @@ class Disc0rd(commands.Bot):
         await self.process_commands(message)
 
     async def on_command_error(self, ctx, error):
-        await ctx.defer(ephemeral=True)
+        if not ctx.interaction.response.is_done():
+            await ctx.defer(ephemeral=True)
         
         if isinstance(error, commands.CommandNotFound):
             await ctx.send("> Comando não encontrado!!", ephemeral=True)
@@ -91,10 +92,10 @@ class Disc0rd(commands.Bot):
                 data_options["bot_configs"]["channel_bot_erro"])  # Canal de logs de erros
 
             traceback_message = "".join(traceback.format_exception(None, error, error.__traceback__))
-            await log_channel.send(f'> **Unexpected error:**\n```\n{traceback_message}\n```')
+            await log_channel.send(f'> **Unexpected error:**\n```\n{traceback_message[:1800]}\n```')
 
 
-bot = Disc0rd(intents=intents, application_id=data_options["bot_configs"]["client_id"])
+bot = Gensen(intents=intents, application_id=data_options["bot_configs"]["client_id"])
 
 
 async def main():

@@ -1,1 +1,1 @@
-web: python disc0rd.py
+web: python main.py

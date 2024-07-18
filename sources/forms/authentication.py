@@ -7,6 +7,7 @@ from local_io import JSONHandler
 from infra import log
 from api import Coingecko, Coinbase
 from firebase import Firebase
+from utils.encryptor import Encryptor
 
 
 textstyle = Utilities().textstyle
@@ -38,6 +39,14 @@ class Authenticate(Modal, title="Authentication"):
 
 	async def on_submit(self, interaction: discord.Interaction):
 		await interaction.response.defer()
+
+		coinbase_api_key_name = str(
+			self.coinbase_api_key_name.value
+		).replace("||", "\n")
+		coinbase_api_private_key = str(
+			self.coinbase_api_private_key.value
+		).replace("||", "\n")
+
 		if not Coingecko(coingecko_api_key=self.coingecko_api_key.value).auth():
 			embed = discord.Embed(
 				title="Watch out!",
@@ -51,9 +60,11 @@ class Authenticate(Modal, title="Authentication"):
 			)
 			await interaction.followup.send(embed=embed, ephemeral=True)
 		
+		log.info("COINGECKO API KEY IS VALID!")
+
 		if not Coinbase(
-			api_key=self.coinbase_api_key_name.value, 
-			api_secret=self.coinbase_api_private_key.value
+			api_key=coinbase_api_key_name, 
+			api_secret=coinbase_api_private_key
 		).auth():
 			embed = discord.Embed(
 				title="Watch out!",
@@ -68,9 +79,21 @@ class Authenticate(Modal, title="Authentication"):
 			await interaction.followup.send(embed=embed, ephemeral=True)
 			return
 		
-		log.info("COINGECKO API KEY IS VALID!")
 		log.info("CONBASE CREDENTIALS ARE VALID!")
 
+		firebase = Firebase()
+		
+		connection = firebase.firebase_connection("root")
+
+		connection.child(f"users/{interaction.user.id}/credentials").update(
+			{
+				"coingecko_api_key": Encryptor().encrypt_api_key(self.coingecko_api_key.value),
+				"coinbase_api_key_name": Encryptor().encrypt_api_key(coinbase_api_key_name),
+				"coinbase_api_private_key": Encryptor().encrypt_api_key(coinbase_api_private_key)
+			}
+		)
+		log.info(f'[REGISTERED CREDENTIALS] {interaction.user.id}')
+    
 	async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
 		await interaction.response.send_message(
 			f'Oops! Ocorreu um erro ao processar suas informações: {error}', ephemeral=True

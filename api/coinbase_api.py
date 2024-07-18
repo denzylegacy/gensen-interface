@@ -9,7 +9,7 @@ import secrets
 from json import dumps
 from coinbase.rest import RESTClient
 from dotenv import load_dotenv, set_key
-from infra import log, COINBASE_VIEW_API_KEY_NAME
+from infra import log, COINBASE_VIEW_API_KEY_NAME, COINBASE_VIEW_API_KEY_PRIVATE_KEY
 
 load_dotenv()
 
@@ -134,6 +134,8 @@ class Coinbase(CoinbaseAuth):
 
 if __name__ == "__main__":
     coinbase = Coinbase()
-    print(coinbase.client_accounts())
+
+    print(coinbase.auth())
+    # print(coinbase.client_accounts())
     # print(coinbase.account_balance_in_brl())
     # print(coinbase.asset_data(asset="NEAR"))

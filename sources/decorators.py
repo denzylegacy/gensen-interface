@@ -40,6 +40,8 @@ def authenticate():
 	async def predicate(ctx):
 		try:
 			assert ctx.guild is not None
+
+			await ctx.defer(ephemeral=True)
 			
 			firebase = Firebase()
 			

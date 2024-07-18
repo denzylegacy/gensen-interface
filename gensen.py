@@ -4,6 +4,7 @@ from infra import log
 from api import Coingecko
 from api import Coinbase
 from firebase import Firebase
+from utils.encryptor import Encryptor
 
 
 class ゲンセン:
@@ -59,7 +60,7 @@ class ゲンセン:
         ) -> float:
         if not brl_asset:
             asset_data = Coingecko(
-                coingecko_api_key=self.user_credentials["coingecko"]["coingecko_api_key"]
+                coingecko_api_key=Encryptor().decrypt_api_key(self.user_credentials["coingecko_api_key"])
             ).coin_data_by_id(coind_id=asset)
 
             if not asset_data:
@@ -73,7 +74,7 @@ class ゲンセン:
 
     def user_asset_validator(self, asset: str) -> dict:
         asset_data = Coingecko(
-            coingecko_api_key=self.user_credentials
+            coingecko_api_key=Encryptor().decrypt_api_key(self.user_credentials["coingecko_api_key"])
         ).coin_data_by_id(coind_id=asset)
 
         if not asset_data:
@@ -83,7 +84,8 @@ class ゲンセン:
         brl: int = asset_data["market_data"]["current_price"]["brl"]
 
         client_asset_data: dict = Coinbase(
-            coingecko_api_key=self.user_credentials["coingecko"]["coingecko_api_key"]
+            api_key=Encryptor().decrypt_api_key(self.user_credentials["coinbase_api_key_name"]),
+            api_secret=Encryptor().decrypt_api_key(self.user_credentials["coinbase_api_private_key"])
         ).asset_data(currency=asset_data["symbol"])
 
         asset_available_balance = client_asset_data["available_balance"]["value"]

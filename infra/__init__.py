@@ -2,6 +2,7 @@ __all__ = [
     "log", 
     "BASE_PATH", 
     "OPTIONS", 
+    "ENCRYPTATION_KEY",
     "DISCORD_TOKEN", 
     "COINGECKO_API_KEY",
     "COINBASE_VIEW_API_KEY_NAME",
@@ -10,6 +11,6 @@ __all__ = [
 
 from .logger import log
 from .settings import (
-    BASE_PATH, OPTIONS, COINGECKO_API_KEY, 
+    BASE_PATH, OPTIONS, ENCRYPTATION_KEY, COINGECKO_API_KEY, 
     DISCORD_TOKEN, COINBASE_VIEW_API_KEY_NAME, COINBASE_VIEW_API_KEY_PRIVATE_KEY
 )
