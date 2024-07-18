@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import firebase_admin
 from typing import Union
 from firebase_admin import credentials, db, initialize_app
 from infra import log
@@ -10,9 +11,10 @@ class Firebase:
 
     @staticmethod
     def firebase_launcher(_credentials: credentials.Certificate) -> bool:
-            initialize_app(
-                _credentials, {"databaseURL": "https://uuidgensen-default-rtdb.firebaseio.com/"}
-            )
+            if not firebase_admin._apps:
+                initialize_app(
+                    _credentials, {"databaseURL": "https://uuidgensen-default-rtdb.firebaseio.com/"}
+                )
 
     def __init__(self) -> None:
         pass

@@ -1,5 +1,7 @@
 import discord
 import traceback
+import datetime
+import pytz
 from discord.ui import Modal, TextInput
 from utils.utils import Utilities
 from local_io import JSONHandler
@@ -23,20 +25,37 @@ class AssetRegistration(Modal, title="Asset registration"):
 
 	base_balance = TextInput(
 		label="Base Balance (BRL)",
-		placeholder="100",
+		placeholder="100 (Enter digits only!)",
 		required=True,
 		max_length=4
 	)
 
 	fixed_profit_brl = TextInput(
 		label="Fixed Profit (BRL)",
-		placeholder="5",
+		placeholder="5 (Enter digits only!)",
 		required=True,
 		max_length=4
 	)
 
 	async def on_submit(self, interaction: discord.Interaction):
 		await interaction.response.defer()
+
+		if (
+			not self.base_balance.value.isdigit() or
+			not self.fixed_profit_brl.value.isdigit()
+		):
+			embed = discord.Embed(
+				title="Watch out!",
+				description=f"The **Base Balance (BRL)** and **Fixed Profit (BRL)** fields must **only** be filled in with numbers!!",
+				color=0xffa07a
+			)
+			embed.add_field(
+				name="", 
+				value="Please check whether the information you entered is correct. If you believe this is a bug, please contact my developer!",
+				inline=False
+			)
+			await interaction.followup.send(embed=embed, ephemeral=True)
+			return
 		
 		asset_data = Coingecko().coin_market_data(coind_id=self.asset.value)
 
@@ -55,13 +74,13 @@ class AssetRegistration(Modal, title="Asset registration"):
 		else:
 			firebase = Firebase()
 			
-			connection = firebase.firebase_connection("users")
+			connection = firebase.firebase_connection("root")
 
 			user_assets = connection.child(
-				f"{interaction.user.id}/assets"
+				f"users/{interaction.user.id}/assets"
 			).get()
 
-			if not self.asset.value in user_assets.keys():
+			if not user_assets or not self.asset.value in user_assets.keys():
 				client_asset_data: dict = ゲンセン().user_asset_validator(asset=self.asset.value)
 				
 				asset_available_value_brl: float = ゲンセン().convert_asset_to_brl(
@@ -69,18 +88,24 @@ class AssetRegistration(Modal, title="Asset registration"):
 					brl_asset=client_asset_data["brl"],
 					available_balance=client_asset_data["available_balance"]
 				)
+
+				timestamp = datetime.datetime.now(
+					pytz.timezone("America/Sao_Paulo")
+				).strftime("%Y-%m-%d %H:%M:%S")
 				
-				connection.child(f"{interaction.user.id}/assets/{self.asset.value}").update(
+				connection.child(f"users/{interaction.user.id}/assets/{self.asset.value}").update(
 					{
 						"name": self.asset.value,
-						"available_balance_brl": client_asset_data["available_balance"],
+						"available_balance_brl": float(client_asset_data["available_balance"]),
 						f"available_balance_{self.asset.value.lower()}": asset_available_value_brl,
-						"base_balance": self.base_balance.value,
+						"base_balance": float(self.base_balance.value),
+						"fixed_profit_brl": float(self.fixed_profit_brl.value),
 						"brl": client_asset_data["brl"],
 						"usd": client_asset_data["usd"],
+						"update_timestamp_america_sp": timestamp
 					}
 				)
-				log.info(f"+ {self.asset.value.upper()} -> {interaction.user.name} ({interaction.user.id})")
+				log.info(f"[LINKED] {self.asset.value.upper()} -> {interaction.user.name} ({interaction.user.id})")
 
 				resp = (
 					f"Asset: {self.asset.value.upper()}\n"
