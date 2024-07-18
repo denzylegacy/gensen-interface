@@ -6,11 +6,11 @@ from discord import app_commands
 
 from local_io import JSONHandler
 from sources.decorators import bot_owner
-from api import Coingecko
 import secrets, string
 from crud import JsonDB
 from infra.settings import BASE_PATH
 from utils.utilities import UniqueIdGenerator
+from sources.decorators import authenticate
 from sources.embeds import CustomEmbed
 from sources.dropdowns import DropdownView
 
@@ -22,7 +22,6 @@ MY_GUILD_ID = discord.Object(data_options["bot_configs"]["sync_guild_id"], type=
 class GeneralCommands(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.coingecko: object = Coingecko()
 		self.json_db = JsonDB(BASE_PATH + "/instance/db.json")
 
 	# command 1
@@ -170,52 +169,49 @@ class GeneralCommands(commands.Cog):
 		)
 
 	# command 4
+	@authenticate()
 	@commands.hybrid_command(name="asset", brief="(Gensen) Add asset")
 	@commands.cooldown(1, 5, commands.BucketType.user)
 	@commands.has_permissions(administrator=True)
-	async def add_asset(self, ctx):
+	async def asset(self, ctx):
 		"""(Gensen) Add asset"""
 
-		try:
-			await ctx.defer(ephemeral=True)
+		await ctx.defer(ephemeral=True)
 
-			unique_id = UniqueIdGenerator.generate_unique_custom_id()
-			options = data_options["dropdown_assets"]["dropdown"]
+		unique_id = UniqueIdGenerator.generate_unique_custom_id()
+		options = data_options["dropdown_assets"]["dropdown"]
 
-			view = DropdownView(
-				options, 
-				dropdown_name="DropdownAssets",
-				placeholder=data_options["dropdown_assets"]["dropdown_placeholder"], 
-				custom_id_dropdown=f"dropdown_{unique_id}",
-				custom_id_button=unique_id
+		view = DropdownView(
+			options, 
+			dropdown_name="DropdownAssets",
+			placeholder=data_options["dropdown_assets"]["dropdown_placeholder"], 
+			custom_id_dropdown=f"dropdown_{unique_id}",
+			custom_id_button=unique_id
+		)
+		
+		embed = (
+			CustomEmbed(
+				"Asset Settings", 
+				"Through this interaction you will be able to manage your assets."
 			)
-			
-			embed = (
-				CustomEmbed(
-					"Asset Settings", 
-					"Through this interaction you will be able to manage your assets."
-				)
-				.set_image("https://cdn.pfps.gg/banners/4391-shirakami-fubuki-dark-background.gif")
-				# https://cdn.pfps.gg/banners/4391-shirakami-fubuki-dark-background.gif
-				# https://cdn.pfps.gg/banners/7834-shirakami-fubuki-white-background.gif
-				# https://cdn.pfps.gg/banners/1785-chainsaw-man-cinema.gif
-				# https://cdn.pfps.gg/banners/7072-makima.gif
-				# https://cdn.pfps.gg/banners/8636-gunny.gif
-				# https://cdn.pfps.gg/banners/2612-2-2-langa-banner.gif
-				# https://cdn.pfps.gg/banners/7335-eye-closeup.gif
-				# https://cdn.pfps.gg/banners/8450-nagatoro-run-high-pace.gif
-				# https://cdn.pfps.gg/banners/6611-anime-elevator.gif
-				# https://cdn.pfps.gg/banners/2042-makise-kurisu.gif
-				# https://cdn.pfps.gg/banners/6920-anime-eyes.gif
-				# https://cdn.pfps.gg/banners/5680-taiga-mad.gif
-				.create_embed()
-			)
-			
-			await ctx.send(embed=embed, view=view, ephemeral=True)
-		except Exception as e:
-			print(f"An error occurred: {e}")
-			tb = traceback.format_exc()
-			print(tb)
+			.set_image("https://cdn.pfps.gg/banners/4391-shirakami-fubuki-dark-background.gif")
+			# https://cdn.pfps.gg/banners/4391-shirakami-fubuki-dark-background.gif
+			# https://cdn.pfps.gg/banners/7834-shirakami-fubuki-white-background.gif
+			# https://cdn.pfps.gg/banners/1785-chainsaw-man-cinema.gif
+			# https://cdn.pfps.gg/banners/7072-makima.gif
+			# https://cdn.pfps.gg/banners/8636-gunny.gif
+			# https://cdn.pfps.gg/banners/2612-2-2-langa-banner.gif
+			# https://cdn.pfps.gg/banners/7335-eye-closeup.gif
+			# https://cdn.pfps.gg/banners/8450-nagatoro-run-high-pace.gif
+			# https://cdn.pfps.gg/banners/6611-anime-elevator.gif
+			# https://cdn.pfps.gg/banners/2042-makise-kurisu.gif
+			# https://cdn.pfps.gg/banners/6920-anime-eyes.gif
+			# https://cdn.pfps.gg/banners/5680-taiga-mad.gif
+			.create_embed()
+		)
+		
+		await ctx.send(embed=embed, view=view, ephemeral=True)
+
 		# await ctx.defer(ephemeral=False)
 
 		# price_for_btc_usd_brl: dict = self.coingecko.coin_current_price_for_btc_usd_brl(coind_id=asset_id)

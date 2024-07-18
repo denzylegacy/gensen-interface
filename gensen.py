@@ -3,6 +3,7 @@ from pprint import pprint
 from infra import log
 from api import Coingecko
 from api import Coinbase
+from firebase import Firebase
 
 
 class ゲンセン:
@@ -25,9 +26,24 @@ class ゲンセン:
     a purchase notification is made
     """
 
-    def __init__(self) -> tuple | None:
-        self.profit: int = 5
+    def __init__(self, user: str) -> tuple | None:
+        self.user: str = user
+        self.user_credentials = self.get_user_credentials()
     
+    def get_user_credentials(self):
+        firebase = Firebase()
+
+        connection = firebase.firebase_connection("root")
+
+        user_credentials = connection.child("users").get()
+
+        if not user_credentials or not self.user in user_credentials.keys():
+            return
+        
+        return connection.child(
+            f"users/{self.user}/credentials"
+        ).get()
+
     def engine(
             self, base_asset_value: int, previous_asset_value: int, current_asset_value: int
         ) -> tuple:
@@ -42,7 +58,9 @@ class ゲンセン:
             self, asset: str = None, brl_asset: int = None, available_balance_brl: float = None
         ) -> float:
         if not brl_asset:
-            asset_data = Coingecko().coin_data_by_id(coind_id=asset)
+            asset_data = Coingecko(
+                coingecko_api_key=self.user_credentials["coingecko"]["coingecko_api_key"]
+            ).coin_data_by_id(coind_id=asset)
 
             if not asset_data:
                 return
@@ -54,7 +72,9 @@ class ゲンセン:
         return round(_available_balance_brl, 3)
 
     def user_asset_validator(self, asset: str) -> dict:
-        asset_data = Coingecko().coin_data_by_id(coind_id=asset)
+        asset_data = Coingecko(
+            coingecko_api_key=self.user_credentials
+        ).coin_data_by_id(coind_id=asset)
 
         if not asset_data:
             return
@@ -62,7 +82,9 @@ class ゲンセン:
         usd: int = asset_data["market_data"]["current_price"]["usd"]
         brl: int = asset_data["market_data"]["current_price"]["brl"]
 
-        client_asset_data: dict = Coinbase().asset_data(currency=asset_data["symbol"])
+        client_asset_data: dict = Coinbase(
+            coingecko_api_key=self.user_credentials["coingecko"]["coingecko_api_key"]
+        ).asset_data(currency=asset_data["symbol"])
 
         asset_available_balance = client_asset_data["available_balance"]["value"]
 

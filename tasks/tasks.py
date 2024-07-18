@@ -20,8 +20,6 @@ class BackgroundTasks(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.current_dir = Path(__file__).resolve().parent
-        self.gensen: object = ゲンセン()
-        self.coingecko: object = Coingecko()
         self.json_db = JsonDB(BASE_PATH + "/instance/db.json")
 
     @commands.Cog.listener()
@@ -41,13 +39,18 @@ class BackgroundTasks(commands.Cog):
             return
 
         for user in users.keys():
+            user_credentials: dict = ゲンセン(user=user).get_user_credentials()
+            
+            if not user_credentials:
+                return
+        
             for asset in users[user]["assets"].keys():
-                client_asset_data: dict = ゲンセン().user_asset_validator(
+                client_asset_data: dict = ゲンセン(user=user).user_asset_validator(
                     asset=users[user]["assets"][asset]["name"]
                 )
 
                 if client_asset_data:
-                    asset_available_value_brl: float = ゲンセン().convert_asset_to_brl(
+                    asset_available_value_brl: float = ゲンセン(user=user).convert_asset_to_brl(
                         asset=users[user]["assets"][asset]["name"],
                         brl_asset=client_asset_data["brl"],
                         available_balance_brl=client_asset_data["available_balance"]

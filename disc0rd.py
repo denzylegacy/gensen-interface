@@ -55,6 +55,7 @@ class Disc0rd(commands.Bot):
 
     async def on_command_error(self, ctx, error):
         await ctx.defer(ephemeral=True)
+        
         if isinstance(error, commands.CommandNotFound):
             await ctx.send("> Comando não encontrado!!", ephemeral=True)
         elif isinstance(error, commands.CommandOnCooldown):

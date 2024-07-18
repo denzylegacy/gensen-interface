@@ -2,16 +2,16 @@
 
 import requests
 from requests.models import Response
-from infra import log, COINGECKO_API_KEY
+from infra import log
 
 
 class Coingecko:
     """Coingecko
     """
 
-    def __init__(self) -> None:
+    def __init__(self, coingecko_api_key: str) -> None:
             self.coingecko_api_url: str = "https://api.coingecko.com/api/v3"
-            self.coingecko_api_key: str = COINGECKO_API_KEY
+            self.coingecko_api_key: str = coingecko_api_key
 
     @log.function_log()
     def auth(self) -> int:
@@ -25,7 +25,7 @@ class Coingecko:
             return response.status_code
         else:
             log.error(f"{response.status_code}, {response.text}")
-            return response.status_code
+            return
 
     @log.function_log()
     def coins_list(self) -> str:

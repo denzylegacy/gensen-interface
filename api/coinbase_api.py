@@ -9,7 +9,7 @@ import secrets
 from json import dumps
 from coinbase.rest import RESTClient
 from dotenv import load_dotenv, set_key
-from infra import log, COINBASE_VIEW_API_KEY_NAME, COINBASE_VIEW_API_KEY_PRIVATE_KEY
+from infra import log, COINBASE_VIEW_API_KEY_NAME
 
 load_dotenv()
 
@@ -17,18 +17,20 @@ load_dotenv()
 class CoinbaseAuth():
     """CoinbaseAuth
     """
-    def __init__(self) -> None:
+    def __init__(self, api_key: str, api_secret: str) -> None:
         self.request_method: str = "GET"
         self.request_host: str = "api.coinbase.com"
         self.request_path: str = "/api/v3/brokerage/accounts"
+        self.api_key: str = api_key
+        self.api_secret: str = api_secret
 
     def build_jwt(self):
             private_key = serialization.load_pem_private_key(
-                data=COINBASE_VIEW_API_KEY_PRIVATE_KEY.encode('utf-8'), password=None
+                data=self.api_secret.encode('utf-8'), password=None
             )
 
             jwt_payload: dict = {
-                'sub': COINBASE_VIEW_API_KEY_NAME,
+                'sub': self.api_key,
                 'iss': "cdp",
                 'nbf': int(time.time()),
                 'exp': int(time.time()) + 120,
@@ -39,28 +41,29 @@ class CoinbaseAuth():
                 payload=jwt_payload,
                 key=private_key,
                 algorithm='ES256',
-                headers={'kid': COINBASE_VIEW_API_KEY_NAME, 'nonce': secrets.token_hex()},
+                headers={'kid': self.api_key, 'nonce': secrets.token_hex()},
             )
 
             return jwt_token
 
 
-    def auth(self) -> None:
-        jwt_token = self.build_jwt()
-        set_key(".env", "COINBASE_JWT_TOKEN", jwt_token)
-        log.info("JWT TOKEN WAS BEEN CREATED!")
+    def auth(self):
+        try:
+            jwt_token = self.build_jwt()
+            # set_key(".env", "COINBASE_JWT_TOKEN", jwt_token)
+            log.info(f"COINBASE JWT TOKEN WAS BEEN CREATED! {jwt_token}")
+            return jwt_token
+        except:
+            return
 
     
 class Coinbase(CoinbaseAuth):
     """Coinbase
     doc: https://docs.cdp.coinbase.com/advanced-trade/docs/sdk-rest-client-trade
     """
-    def __init__(self) -> None:
-        super().__init__()
-        self.client = RESTClient(
-            api_key=COINBASE_VIEW_API_KEY_NAME,
-            api_secret=COINBASE_VIEW_API_KEY_PRIVATE_KEY
-        )
+    def __init__(self, api_key: str, api_secret: str) -> None:
+        super().__init__(api_key=api_key, api_secret=api_secret)
+        self.client = RESTClient(api_key=api_key, api_secret=api_secret)
 
     def client_accounts(self) -> dict:
         accounts = self.client.get_accounts()
