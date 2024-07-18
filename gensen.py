@@ -1,8 +1,8 @@
 from pprint import pprint
 
 from infra import log
-from api.coingecko import Coingecko
-from api.coinbase_api import Coinbase
+from api import Coingecko
+from api import Coinbase
 
 
 class ゲンセン:

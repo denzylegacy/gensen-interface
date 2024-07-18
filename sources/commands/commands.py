@@ -7,7 +7,7 @@ from discord import app_commands
 
 from local_io import JSONHandler
 from sources.decorators import bot_owner
-from api.coingecko import Coingecko
+from api import Coingecko
 import secrets, string
 from crud import JsonDB
 from infra.settings import BASE_PATH

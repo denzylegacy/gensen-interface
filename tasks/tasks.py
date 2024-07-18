@@ -7,7 +7,7 @@ from pathlib import Path
 
 from infra import log
 from infra.settings import BASE_PATH
-from api.coingecko import Coingecko
+from api import Coingecko
 from crud import JsonDB
 from firebase import Firebase
 from gensen import ゲンセン

@@ -33,13 +33,13 @@ class Disc0rd(commands.Bot):
 
     async def setup_hook(self):
         cogs = [
-            'sources.commands.commands',
-            'tasks.tasks',
+            "sources.commands.commands",
+            "tasks.tasks",
         ]
 
         for cog in cogs:
             await self.load_extension(cog)
-            log.info(f'Cog {cog} loaded!')
+            log.info(f"Cog {cog} loaded!")
 
     async def on_ready(self):
         await self.change_presence(
@@ -56,7 +56,7 @@ class Disc0rd(commands.Bot):
     async def on_command_error(self, ctx, error):
         await ctx.defer(ephemeral=True)
         if isinstance(error, commands.CommandNotFound):
-            await ctx.send('> Comando não encontrado!!', ephemeral=True)
+            await ctx.send("> Comando não encontrado!!", ephemeral=True)
         elif isinstance(error, commands.CommandOnCooldown):
             retry_after = error.retry_after  # Tempo restante em segundos
             tempo_restante = datetime.timedelta(seconds=retry_after)
@@ -68,9 +68,9 @@ class Disc0rd(commands.Bot):
             mensagem = f"> Este comando está em cooldown! Tente novamente em {dias} dias, {horas} horas, {minutos} minutos e {segundos} segundos."
             await ctx.send(mensagem, ephemeral=True)
         elif isinstance(error, commands.MissingPermissions):
-            await ctx.send('> Você não tem permissão para usar esse comando! 😪', ephemeral=True)
+            await ctx.send("> Você não tem permissão para usar esse comando! 😪", ephemeral=True)
         elif isinstance(error, commands.BotMissingPermissions):
-            await ctx.send('> Eu não tenho permissão para executar esse comando! 😪', ephemeral=True)
+            await ctx.send("> Eu não tenho permissão para executar esse comando! 😪", ephemeral=True)
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("> Please send all arguments! Type ``/help command`` to view the command details.",
                            ephemeral=True)
