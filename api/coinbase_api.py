@@ -9,7 +9,7 @@ import secrets
 from json import dumps
 from coinbase.rest import RESTClient
 from dotenv import load_dotenv, set_key
-from infra import log, COINBASE_VIEW_API_KEY_NAME, COINBASE_VIEW_API_KEY_PRIVATE_KEY
+from infra import log
 
 load_dotenv()
 

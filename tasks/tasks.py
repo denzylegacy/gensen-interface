@@ -65,21 +65,15 @@ class BackgroundTasks(commands.Cog):
                                 "quote_currency": "brl",
                                 "amount": "1"
                             }
-
-                            print("params", params)
                             
                             quote_sell = foxbit.request(
                                 "GET", "/rest/v3/markets/quotes", params=params, body=None
                             )
 
-                            print("quote_sell", quote_sell)
-
                             asset_available_value_brl = foxbit.convert_asset_to_brl(
                                 brl_asset=float(account["balance_available"]),
                                 available_balance_brl=float(quote_sell["price"])
                             )
-
-                            print(f"asset_available_value_brl: {asset_available_value_brl}")
 
                             difference_check: float = round(
                                 float(asset_available_value_brl) - 
