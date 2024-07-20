@@ -21,10 +21,16 @@ class Firebase:
 
     def firebase_connection(self, reference_path: str) -> Union[db.Reference, None]:
         try:
-            if os.getenv("ENVIRONMENT") != "SERVER":
-                FIREBASE_API_KEY = "infra/uuidgensen-firebase-adminsdk-odnzh-1be5bd0dcb.json"
+            if FIREBASE_API_KEY:
+                self.firebase_launcher(credentials.Certificate(FIREBASE_API_KEY))
+            else:
+                self.firebase_launcher(
+                    credentials.Certificate(
+                        "infra/uuidgensen-firebase-adminsdk-odnzh-1be5bd0dcb.json"
+                    )
+                )
 
-            self.firebase_launcher(credentials.Certificate(FIREBASE_API_KEY))
+            
             return db.reference(reference_path)
         except Exception as e:
             log.error(f"Error establishing Firebase connection: {e}")
