@@ -87,7 +87,7 @@ class Gensen(commands.Bot):
 
         else:
             log_channel = ctx.guild.get_channel(
-                data_options["bot_configs"]["channel_bot_erro"])  # Canal de logs de erros
+                data_options["bot_configs"]["channel_bot_erro"])
 
             traceback_message = "".join(traceback.format_exception(None, error, error.__traceback__))
             await log_channel.send(f'> **Unexpected error:**\n```\n{traceback_message[:1800]}\n```')
