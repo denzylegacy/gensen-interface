@@ -104,7 +104,7 @@ class BackgroundTasks(commands.Cog):
                                 await self.bot.get_user(int(user)).send(embed=embed)
                                 await asyncio.sleep(1)
 
-    @tasks.loop(seconds=15)
+    @tasks.loop(seconds=30)
     async def background_tasks(self):
         await self.market_conditions_evaluator()
 
