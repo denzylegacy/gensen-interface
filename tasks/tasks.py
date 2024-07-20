@@ -105,19 +105,20 @@ class BackgroundTasks(commands.Cog):
 
                                 ### DM NOTIFICATION ###
 
-                                log.info(f'[NOTIFICATION] {cryptocurrencie} -> {user}')
+                                log.info(f"[INSTANT ORDER NOTIFICATION] {cryptocurrencie} -> {user}")
                                 
                                 embed = discord.Embed(
                                     title=f'Short-term profit of {cryptocurrencie.upper()} (+**{difference_check}**)!',
-                                    description=f'Right now it is recommended to **sell** R$**{difference_check}** worth of {asset["name"]}!!',
+                                    description=f'At that very moment I made a sale of R$**{difference_check}** worth of {asset["name"]}!!',
                                     color=0xffa07a
                                 )
+                                
                                 embed.add_field(
                                     name="", 
                                     value="Remember, make your sales with caution. If you believe this is a mistake, please contact my developer!",
                                     inline=False
                                 )
-                                
+
                                 await self.bot.get_user(int(user)).send(embed=embed)
                                 await asyncio.sleep(1)
 
