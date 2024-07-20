@@ -9,8 +9,8 @@ class ExchangeManagementButtons(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
 
-    @discord.ui.button(label="Add API Keys", style=discord.ButtonStyle.green, custom_id="add_api:button")
-    async def AddAPIKeys(self, interaction: discord.Interaction, button: discord.ui.Button):
+    @discord.ui.button(label="API Keys", style=discord.ButtonStyle.green, custom_id="api_key:button")
+    async def APIKeys(self, interaction: discord.Interaction, button: discord.ui.Button):
         try:
             from ..forms.register_foxbit_api_keys import FoxbitApiKeysRegistration
             await interaction.response.send_modal(FoxbitApiKeysRegistration())

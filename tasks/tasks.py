@@ -110,13 +110,13 @@ class BackgroundTasks(commands.Cog):
                                     
                                     embed = discord.Embed(
                                         title=f'Short-term profit of {cryptocurrencie.upper()} (+**{difference_check}**)!',
-                                        description=f'At that very moment I made a sale of R$**{difference_check}** worth of {asset["name"]}!!',
+                                        description=f'At that very moment I made a **sale** of R$**{difference_check}** worth of {asset["name"]}!!',
                                         color=0xffa07a
                                     )
 
                                     embed.add_field(
                                         name="", 
-                                        value="Remember, make your sales with caution. If you believe this is a mistake, please contact my developer!",
+                                        value="If you believe this is a mistake, please contact my developer!",
                                         inline=False
                                     )
 
