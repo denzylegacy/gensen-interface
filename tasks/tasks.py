@@ -6,7 +6,7 @@ import asyncio
 from pathlib import Path
 
 from infra import log
-from infra.settings import BASE_PATH
+from infra.settings import BASE_PATH, ENVIRONMENT
 from crud import JsonDB
 from firebase import Firebase
 from api.foxbit import Foxbit
@@ -88,21 +88,22 @@ class BackgroundTasks(commands.Cog):
                                 (float(asset["fixed_profit_brl"]) + 0.3)
                                 ):
 
-                                order = {
-                                    "market_symbol": f"{cryptocurrencie}brl",
-                                    "side": "SELL",
-                                    "type": "INSTANT",
-                                    "amount": "5.00"
-                                }
+                                if ENVIRONMENT == "SERVER":
+                                    order = {
+                                        "market_symbol": f"{cryptocurrencie}brl",
+                                        "side": "SELL",
+                                        "type": "INSTANT",
+                                        "amount": "5.00"
+                                    }
+                                    
+                                    orderResponse = foxbit.request("POST", "/rest/v3/orders", None, body=order)
+                                    
+                                    timestamp = datetime.datetime.now(
+                                        pytz.timezone("America/Sao_Paulo")
+                                    ).strftime("%Y-%m-%d %H:%M:%S")
+                                                    
+                                    log.info(f"[{timestamp}] ORDER RESPONSE: {orderResponse}")
                                 
-                                orderResponse = foxbit.request("POST", "/rest/v3/orders", None, body=order)
-                                
-                                timestamp = datetime.datetime.now(
-                                    pytz.timezone("America/Sao_Paulo")
-                                ).strftime("%Y-%m-%d %H:%M:%S")
-                                                
-                                log.info(f"[{timestamp}] ORDER RESPONSE: {orderResponse}")
-
                                 ### DM NOTIFICATION ###
 
                                 log.info(f"[INSTANT ORDER NOTIFICATION] {cryptocurrencie} -> {user}")
@@ -112,7 +113,7 @@ class BackgroundTasks(commands.Cog):
                                     description=f'At that very moment I made a sale of R$**{difference_check}** worth of {asset["name"]}!!',
                                     color=0xffa07a
                                 )
-                                
+
                                 embed.add_field(
                                     name="", 
                                     value="Remember, make your sales with caution. If you believe this is a mistake, please contact my developer!",

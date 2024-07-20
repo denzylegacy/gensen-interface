@@ -9,6 +9,8 @@ import os
 load_dotenv()
 
 
+ENVIRONMENT: Any = os.getenv("ENVIRONMENT", "")
+
 BASE_PATH = str(Path(__file__).resolve().parent.parent)
 
 OPTIONS = JSONHandler().read_options_json(r"src/json/options.json")
