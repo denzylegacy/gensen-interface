@@ -96,6 +96,6 @@ class Authenticate(Modal, title="Authentication"):
     
 	async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
 		await interaction.response.send_message(
-			f'Oops! Ocorreu um erro ao processar suas informações: {error}', ephemeral=True
+			f"An error occurred while processing your information: {error}", ephemeral=True
 		)
 		traceback.print_exception(type(error), error, error.__traceback__)

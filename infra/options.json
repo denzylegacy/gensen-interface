@@ -22,12 +22,19 @@
      "forms": {
         "register_asset":"Hey, if you really want to register a new asset, click **confirm**!"
      },
-     "dropdown_assets": {
+     "dropdown_asset": {
         "dropdown_placeholder": "Available options",
         "description": "> Hey, please select one of the available options!!",
         "dropdown": [
             ["Add", "Add a new asset", "🈳"],
             ["Delete", "Remove an asset", "🈲"]
+        ]
+     },
+     "dropdown_exchange": {
+        "dropdown_placeholder": "Available options",
+        "description": "> Hey, please select one of the available options!!",
+        "dropdown": [
+            ["Foxbit", "Brazilian Exchange", "🦊"]
         ]
      },
      "tickets": {

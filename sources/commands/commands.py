@@ -169,44 +169,32 @@ class GeneralCommands(commands.Cog):
 		)
 
 	# command 4
-	@authenticate()
-	@commands.hybrid_command(name="asset", brief="Add asset")
+	# @authenticate()
+	@commands.hybrid_command(name="control", brief="Manage your exchanges and assets!")
 	@commands.cooldown(1, 5, commands.BucketType.user)
 	@commands.has_permissions(administrator=True)
-	async def asset(self, ctx):
-		"""Add asset"""
+	async def control(self, ctx):
+		"""User exchange and asset manager."""
 
 		await ctx.defer(ephemeral=True)
 
 		unique_id = UniqueIdGenerator.generate_unique_custom_id()
-		options = data_options["dropdown_assets"]["dropdown"]
-
+		options = data_options["dropdown_exchange"]["dropdown"]
+		
 		view = DropdownView(
 			options, 
-			dropdown_name="DropdownAssets",
-			placeholder=data_options["dropdown_assets"]["dropdown_placeholder"], 
+			dropdown_name="DropdownExchange",
+			placeholder=data_options["dropdown_exchange"]["dropdown_placeholder"], 
 			custom_id_dropdown=f"dropdown_{unique_id}",
 			custom_id_button=unique_id
 		)
 		
 		embed = (
 			CustomEmbed(
-				"Asset Settings", 
-				"Through this interaction you will be able to manage your assets."
+				"System Settings", 
+				"Through this interaction you will be able to manage your exchanges and assets."
 			)
 			.set_image("https://cdn.pfps.gg/banners/4391-shirakami-fubuki-dark-background.gif")
-			# https://cdn.pfps.gg/banners/4391-shirakami-fubuki-dark-background.gif
-			# https://cdn.pfps.gg/banners/7834-shirakami-fubuki-white-background.gif
-			# https://cdn.pfps.gg/banners/1785-chainsaw-man-cinema.gif
-			# https://cdn.pfps.gg/banners/7072-makima.gif
-			# https://cdn.pfps.gg/banners/8636-gunny.gif
-			# https://cdn.pfps.gg/banners/2612-2-2-langa-banner.gif
-			# https://cdn.pfps.gg/banners/7335-eye-closeup.gif
-			# https://cdn.pfps.gg/banners/8450-nagatoro-run-high-pace.gif
-			# https://cdn.pfps.gg/banners/6611-anime-elevator.gif
-			# https://cdn.pfps.gg/banners/2042-makise-kurisu.gif
-			# https://cdn.pfps.gg/banners/6920-anime-eyes.gif
-			# https://cdn.pfps.gg/banners/5680-taiga-mad.gif
 			.create_embed()
 		)
 		

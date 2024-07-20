@@ -27,7 +27,7 @@ class ゲンセン:
     a purchase notification is made
     """
 
-    def __init__(self, user: str) -> tuple | None:
+    def __init__(self, user: str = None) -> tuple | None:
         self.user: str = user
     
     def get_user_credentials(self):
@@ -55,24 +55,14 @@ class ゲンセン:
             return value_difference, False
 
     def convert_asset_to_brl(
-            self, asset: str = None, brl_asset: int = None, available_balance_brl: float = None
+            self, brl_asset: float = None, available_balance_brl: float = None
         ) -> float:
-        if not brl_asset:
-            asset_data = Coingecko(
-                coingecko_api_key=Encryptor().decrypt_api_key(self.user_credentials["coingecko_api_key"])
-            ).coin_data_by_id(coind_id=asset)
 
-            if not asset_data:
-                return
-          
-            brl_asset: int = asset_data["market_data"]["current_price"]["brl"]
-
-        _available_balance_brl = float(available_balance_brl) * int(brl_asset)
+        _available_balance_brl = float(available_balance_brl) * float(brl_asset)
 
         return round(_available_balance_brl, 3)
 
     def user_asset_validator(self, asset: str) -> dict:
-
         user_credentials: dict = ゲンセン(user=self.user).get_user_credentials()
 
         asset_data = Coingecko(

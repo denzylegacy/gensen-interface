@@ -7,7 +7,7 @@ import traceback
 # from sources.dropdowns.dropdown import DropdownView
 
 
-class DropdownAssets(discord.ui.Select):
+class DropdownAsset(discord.ui.Select):
     def __init__(self, args, **kwargs):
         placeholder = kwargs.get("placeholder") or "You didn't type the placeholder"
         min_values = kwargs.get("min_values") or 1
@@ -53,17 +53,8 @@ class DropdownAssets(discord.ui.Select):
                         "Gensen Asset Inclusion",
                         "You must enter the name of the asset you want to register in your username, the base value and the value related to the fixed profit for it after clicking continue."
                     )
-                	.set_image("https://cdn.pfps.gg/banners/9031-toney.gif")
-                	# https://i.imgur.com/wlLmdW9.gif
-                	# https://i.imgur.com/9df8CxP.gif
-                	# https://i.imgur.com/oDIA7hz.gif
-                	# https://i.imgur.com/isuZQ31.gif
-                	# https://i.imgur.com/Pj2dF4w.gif
-                	# https://i.imgur.com/8Kop1Lt.gif
-                	# https://i.imgur.com/dbSES5Z.gif
-                	# https://i.imgur.com/tKrQjIA.gif
-                	# https://i.imgur.com/fvQcI5h.mp4
-                	# https://i.imgur.com/WmqMqNG.png
+                	.set_image("https://cdn.pfps.gg/banners/1785-chainsaw-man-cinema.gif")
+                    # https://cdn.pfps.gg/banners/9031-toney.gif
                 	.create_embed()
                 )
 
