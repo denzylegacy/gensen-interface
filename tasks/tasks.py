@@ -79,6 +79,8 @@ class BackgroundTasks(commands.Cog):
                                 float(asset_available_value_brl) - 
                                 float(asset["base_balance"]), 3
                             )
+                            
+                            log.info(f"{difference_check}: {cryptocurrencie} -> {user}")
 
                             if (
                                 float(asset_available_value_brl) >= 
