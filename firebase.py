@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import json
 import firebase_admin
 from typing import Union
 from firebase_admin import credentials, db, initialize_app
@@ -22,7 +23,7 @@ class Firebase:
     def firebase_connection(self, reference_path: str) -> Union[db.Reference, None]:
         try:
             if FIREBASE_API_KEY:
-                self.firebase_launcher(credentials.Certificate(FIREBASE_API_KEY))
+                self.firebase_launcher(credentials.Certificate(json.loads(FIREBASE_API_KEY)))
             else:
                 self.firebase_launcher(
                     credentials.Certificate(
