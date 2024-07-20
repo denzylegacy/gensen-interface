@@ -67,12 +67,12 @@ class Gensen(commands.Bot):
             horas, resto_segundos = divmod(tempo_restante.seconds, 3600)
             minutos, segundos = divmod(resto_segundos, 60)
 
-            mensagem = f"> Este comando está em cooldown! Tente novamente em {dias} dias, {horas} horas, {minutos} minutos e {segundos} segundos."
+            mensagem = f"> This command is on cooldown! Please try again in {dias} days, {horas} hours, {minutos} minutes and {segundos} seconds."
             await ctx.send(mensagem, ephemeral=True)
         elif isinstance(error, commands.MissingPermissions):
-            await ctx.send("> Você não tem permissão para usar esse comando! 😪", ephemeral=True)
+            await ctx.send("> You do not have permission to use this command! 😪", ephemeral=True)
         elif isinstance(error, commands.BotMissingPermissions):
-            await ctx.send("> Eu não tenho permissão para executar esse comando! 😪", ephemeral=True)
+            await ctx.send("> I don't have permission to run this command! 😪", ephemeral=True)
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("> Please send all arguments! Type ``/help command`` to view the command details.",
                            ephemeral=True)
@@ -80,10 +80,10 @@ class Gensen(commands.Bot):
             await ctx.send("> Esse comando não existe! Use ``/help`` para ver a lista completa de comandos.",
                            ephemeral=True)
         elif isinstance(error, commands.MessageNotFound):
-            await ctx.send("> Mensagem não encontrada 😪", ephemeral=True)
+            await ctx.send("> Message not found 😪", ephemeral=True)
 
         elif isinstance(error, commands.CheckFailure):
-            await ctx.send("Esse comando está disponível somente para membros verificados!!", ephemeral=True)
+            await ctx.send("This command is only available to verified members!!", ephemeral=True)
 
         else:
             log_channel = ctx.guild.get_channel(
