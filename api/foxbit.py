@@ -64,7 +64,7 @@ class Foxbit:
             )
             return False
         except Exception as err:
-            print(f"An error occurred: {err}")
+            log.error(f"An error occurred: {err}")
             raise
 
     def check_currency(self, currency: str) -> bool | dict:
@@ -82,11 +82,7 @@ class Foxbit:
     def convert_asset_to_brl(
             self, brl_asset: float = None, available_balance_brl: float = None
         ) -> float:
-
-        print(f"==== brl_asset {brl_asset}")
-        print(f"===== available_balance_brl {available_balance_brl}")
         _available_balance_brl = float(available_balance_brl) * float(brl_asset)
-
         return round(_available_balance_brl, 3)
 
 

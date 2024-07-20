@@ -85,7 +85,6 @@ class BackgroundTasks(commands.Cog):
                                 float(asset["base_balance"]) + 
                                 (float(asset["fixed_profit_brl"]) + 0.3)
                                 ):
-                                print(f"Tá na hora de vender, pai! +{difference_check} na conta!")
 
                                 ### DM NOTIFICATION ###
 

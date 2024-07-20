@@ -30,7 +30,6 @@ class Firebase:
                         "infra/uuidgensen-firebase-adminsdk-odnzh-1be5bd0dcb.json"
                     )
                 )
-
             
             return db.reference(reference_path)
         except Exception as e:
