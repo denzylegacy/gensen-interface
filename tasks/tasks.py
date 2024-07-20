@@ -88,6 +88,21 @@ class BackgroundTasks(commands.Cog):
                                 (float(asset["fixed_profit_brl"]) + 0.3)
                                 ):
 
+                                order = {
+                                    "market_symbol": f"{cryptocurrencie}brl",
+                                    "side": "SELL",
+                                    "type": "INSTANT",
+                                    "amount": "5.00"
+                                }
+                                
+                                orderResponse = foxbit.request("POST", "/rest/v3/orders", None, body=order)
+                                
+                                timestamp = datetime.datetime.now(
+                                    pytz.timezone("America/Sao_Paulo")
+                                ).strftime("%Y-%m-%d %H:%M:%S")
+                                                
+                                log.info(f"[{timestamp}] ORDER RESPONSE: {orderResponse}")
+
                                 ### DM NOTIFICATION ###
 
                                 log.info(f'[NOTIFICATION] {cryptocurrencie} -> {user}')
@@ -102,7 +117,7 @@ class BackgroundTasks(commands.Cog):
                                     value="Remember, make your sales with caution. If you believe this is a mistake, please contact my developer!",
                                     inline=False
                                 )
-
+                                
                                 await self.bot.get_user(int(user)).send(embed=embed)
                                 await asyncio.sleep(1)
 

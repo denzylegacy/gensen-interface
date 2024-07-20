@@ -108,40 +108,42 @@ if __name__ == "__main__":
     # print(currencies["data"])
 
     # User accounts
-    accounts = foxbit.request("GET", "/rest/v3/accounts", None, None)
+    # accounts = foxbit.request("GET", "/rest/v3/accounts", None, None)
 
-    currency = "sol"
+    # currency = "near"
 
-    for account in accounts["data"]:
-        if account["currency_symbol"] == currency:
+    # for account in accounts["data"]:
+    #     if account["currency_symbol"] == currency:
 
-            print(account)
+    #         print(account)
 
-            # Exemplo de cotação de venda
-            params = {
-                "side": "buy",
-                "base_currency": currency,
-                "quote_currency": "brl",
-                "amount": "1"
-            }
+    #         # Exemplo de cotação de venda
+    #         params = {
+    #             "side": "buy",
+    #             "base_currency": currency,
+    #             "quote_currency": "brl",
+    #             "amount": "1"
+    #         }
             
-            quote_sell = foxbit.request("GET", "/rest/v3/markets/quotes", params=params, body=None)
-            print("Cotação de venda:", quote_sell)
+    #         quote_sell = foxbit.request("GET", "/rest/v3/markets/quotes", params=params, body=None)
+    #         print("Cotação de venda:", quote_sell)
 
-            print(foxbit.convert_asset_to_brl(
-                brl_asset=float(account["balance_available"]), 
-                available_balance_brl=float(quote_sell["price"])))
-            break
+    #         print(foxbit.convert_asset_to_brl(
+    #             brl_asset=float(account["balance_available"]), 
+    #             available_balance_brl=float(quote_sell["price"])))
+    #         break
 
+    # ### ORDERKAMER ###
+    # currency = "sol"
     
-    # quotes = {
-    #     "side": "buy",
-    #     "base_currency": "usdt",
-    #     "quote_currency": "brl",
-    #     "amount": "2",
-    # }
+    # order = {
+    #         "market_symbol": f"{currency}brl",
+    #         "side": "SELL",
+    #         "type": "INSTANT",
+    #         "amount": "5.00"
+    #     }
     
-    # orderResponse = foxbit.request("GET", "/rest/v3/markets/quotes", params=quotes, body=None)
+    # orderResponse = foxbit.request("POST", "/rest/v3/orders", None, body=order)
     # print('Response:', orderResponse)
 
     # currency = "btc"
