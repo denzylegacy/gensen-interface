@@ -104,24 +104,24 @@ class BackgroundTasks(commands.Cog):
                                                     
                                     log.info(f"[{timestamp}] ORDER RESPONSE: {orderResponse}")
                                 
-                                ### DM NOTIFICATION ###
+                                    ### DM NOTIFICATION ###
 
-                                log.info(f"[INSTANT ORDER NOTIFICATION] {cryptocurrencie} -> {user}")
-                                
-                                embed = discord.Embed(
-                                    title=f'Short-term profit of {cryptocurrencie.upper()} (+**{difference_check}**)!',
-                                    description=f'At that very moment I made a sale of R$**{difference_check}** worth of {asset["name"]}!!',
-                                    color=0xffa07a
-                                )
+                                    log.info(f"[INSTANT ORDER NOTIFICATION] {cryptocurrencie} -> {user}")
+                                    
+                                    embed = discord.Embed(
+                                        title=f'Short-term profit of {cryptocurrencie.upper()} (+**{difference_check}**)!',
+                                        description=f'At that very moment I made a sale of R$**{difference_check}** worth of {asset["name"]}!!',
+                                        color=0xffa07a
+                                    )
 
-                                embed.add_field(
-                                    name="", 
-                                    value="Remember, make your sales with caution. If you believe this is a mistake, please contact my developer!",
-                                    inline=False
-                                )
+                                    embed.add_field(
+                                        name="", 
+                                        value="Remember, make your sales with caution. If you believe this is a mistake, please contact my developer!",
+                                        inline=False
+                                    )
 
-                                await self.bot.get_user(int(user)).send(embed=embed)
-                                await asyncio.sleep(1)
+                                    await self.bot.get_user(int(user)).send(embed=embed)
+                                    await asyncio.sleep(1)
 
     @tasks.loop(seconds=30)
     async def background_tasks(self):
