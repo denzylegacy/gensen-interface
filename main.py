@@ -85,7 +85,6 @@ class Gensen(commands.Bot):
 
         elif isinstance(error, commands.CheckFailure):
             await ctx.send("This command is only available to verified members!!", ephemeral=True)
-
         else:
             log_channel = ctx.guild.get_channel(
                 data_options["bot_configs"]["channel_bot_erro"])

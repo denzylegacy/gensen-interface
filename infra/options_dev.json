@@ -1,11 +1,11 @@
 {
      "bot_configs": {
-        "client_id": 1205621013417693205,
+        "client_id": 1264423842005258281,
         "channel_log": 1262569049900974080,
         "channel_ticket_log": 1262569092619964509,
         "channel_bot_erro": 1262569124199137391,
         "sync_guild_id": 1262568793968873596,
-        "prefix": "g!",
+        "prefix": "b!",
         "activity": "Cryptos",
         "premium_channel_support": 1262569380865114213,
         "role_client_premium_id": "premium",
