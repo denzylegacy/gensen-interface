@@ -128,5 +128,5 @@ class BackgroundTasks(commands.Cog):
         await self.market_conditions_evaluator()
 
 
-async def setup(bot: commands.Bot) -> None:
-    await bot.add_cog(BackgroundTasks(bot))
+# async def setup(bot: commands.Bot) -> None:
+#     await bot.add_cog(BackgroundTasks(bot))

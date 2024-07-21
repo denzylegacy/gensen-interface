@@ -1,99 +1,108 @@
-from pprint import pprint
+import datetime
+import pytz
+import asyncio
+from pathlib import Path
 
 from infra import log
-from api import Coingecko
-from api import Coinbase
+from infra.settings import BASE_PATH, ENVIRONMENT
+from crud import JsonDB
 from firebase import Firebase
+from api.foxbit import Foxbit
 from utils.encryptor import Encryptor
 
 
-class ゲンセン:
-    """Gensen -Golden Fountain-
+class MarketConditionsEvaluator:
+    def __init__(self):
+        self.current_dir = Path(__file__).resolve().parent
+        self.json_db = JsonDB(BASE_PATH + "/instance/db.json")
 
-    - Sell for every R$5.00 of profit (This value may be changed after future analysis.)
-    - Supply:
-      - Think about what the issue of gas depletion will be like (As with each sale the value of the crypto will be reduced)
-    - Perform automatic analysis for low supply suggestion per token
-    - Cover the initial cost invested
-    - Obtain at least half of the capital invested apart from covering the same amount
-
-    Considerations:
-    * It must be necessary to input the assets and values for the assets
-    for each sale, the machine must request confirmation of the sale, as long as the Coinbase API is not implemented
-    This is to avoid problems (I'm in a hurry and I'm not going to explain them now...)
-    
-    * The user must be notified when to make the sale and purchase, and which assets
-    * Create a watch list, so as soon as an asset falls below a certain percentage,
-    a purchase notification is made
-    """
-
-    def __init__(self, user: str = None) -> tuple | None:
-        self.user: str = user
-    
-    def get_user_credentials(self):
+    async def evaluate_market_conditions(self):
+        log.info(f"[background_tasks] market_conditions_evaluator: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        
         firebase = Firebase()
-
+        
         connection = firebase.firebase_connection("root")
 
-        user_credentials = connection.child("users").get()
+        users = connection.child("users").get()
 
-        if not user_credentials or not str(self.user) in user_credentials.keys():
+        if not users:
             return
+
+        for user in users.keys():
+            user_credentials = connection.child(
+                f"users/{user}/exchanges/foxbit/credentials"
+            ).get()
+            
+            if not user_credentials:
+                continue
         
-        return connection.child(
-            f"users/{self.user}/credentials"
-        ).get()
+            for exchange in users[user]["exchanges"].keys():
+                for cryptocurrency in users[user]["exchanges"][exchange]["cryptocurrencies"].keys():
+                    asset = users[user]["exchanges"][exchange]["cryptocurrencies"][cryptocurrency]
 
-    def engine(
-            self, base_asset_value: int, previous_asset_value: int, current_asset_value: int
-        ) -> tuple:
-        value_difference: int = (previous_asset_value * base_asset_value) / current_asset_value
+                    foxbit = Foxbit(
+                        api_key=Encryptor().decrypt_api_key(user_credentials["FOXBIT_ACCESS_KEY"]),
+                        api_secret=Encryptor().decrypt_api_key(user_credentials["FOXBIT_SECRET_KEY"])
+                    )
 
-        if value_difference >= self.profit:
-            return value_difference, True
-        else:
-            return value_difference, False
+                    accounts = foxbit.request("GET", "/rest/v3/accounts", None, None)
 
-    def convert_asset_to_brl(
-            self, brl_asset: float = None, available_balance_brl: float = None
-        ) -> float:
+                    for account in accounts["data"]:
+                        if account["currency_symbol"] == cryptocurrency:
+                            params = {
+                                "side": "buy",
+                                "base_currency": cryptocurrency,
+                                "quote_currency": "brl",
+                                "amount": "1"
+                            }
+                            
+                            quote_sell = foxbit.request(
+                                "GET", "/rest/v3/markets/quotes", params=params, body=None
+                            )
 
-        _available_balance_brl = float(available_balance_brl) * float(brl_asset)
+                            asset_available_value_brl = foxbit.convert_asset_to_brl(
+                                brl_asset=float(account["balance_available"]),
+                                available_balance_brl=float(quote_sell["price"])
+                            )
 
-        return round(_available_balance_brl, 3)
+                            difference_check: float = round(
+                                float(asset_available_value_brl) - 
+                                float(asset["base_balance"]), 3
+                            )
+                            
+                            log.info(f"{difference_check}: {cryptocurrency} -> {user}")
 
-    def user_asset_validator(self, asset: str) -> dict:
-        user_credentials: dict = ゲンセン(user=self.user).get_user_credentials()
+                            if (
+                                float(asset_available_value_brl) >= 
+                                float(asset["base_balance"]) + 
+                                (float(asset["fixed_profit_brl"]) + 0.3)
+                            ):
+                                if ENVIRONMENT == "SERVER":
+                                    order = {
+                                        "market_symbol": f"{cryptocurrency}brl",
+                                        "side": "SELL",
+                                        "type": "INSTANT",
+                                        "amount": "5.00"
+                                    }
+                                    
+                                    order_response = foxbit.request("POST", "/rest/v3/orders", None, body=order)
+                                    
+                                    timestamp = datetime.datetime.now(
+                                        pytz.timezone("America/Sao_Paulo")
+                                    ).strftime("%Y-%m-%d %H:%M:%S")
+                                                    
+                                    log.info(f"[{timestamp}] ORDER RESPONSE: {order_response}")
+                                
+                                    log.info(f"[INSTANT ORDER NOTIFICATION] {cryptocurrency} -> {user}")
+                                    
+                                    await asyncio.sleep(1)
 
-        asset_data = Coingecko(
-            coingecko_api_key=Encryptor().decrypt_api_key(user_credentials["coingecko_api_key"])
-        ).coin_data_by_id(coind_id=asset)
+async def main():
+    evaluator = MarketConditionsEvaluator()
+    while True:
+        await evaluator.evaluate_market_conditions()
+        await asyncio.sleep(30)
 
-        if not asset_data:
-            return
-        
-        usd: int = asset_data["market_data"]["current_price"]["usd"]
-        brl: int = asset_data["market_data"]["current_price"]["brl"]
-
-        client_asset_data: dict = Coinbase(
-            api_key=Encryptor().decrypt_api_key(user_credentials["coinbase_api_key_name"]),
-            api_secret=Encryptor().decrypt_api_key(user_credentials["coinbase_api_private_key"])
-        ).asset_data(currency=asset_data["symbol"])
-
-        asset_available_balance = client_asset_data["available_balance"]["value"]
-
-        return {
-            "available_balance": asset_available_balance, "brl": brl, "usd": usd,
-        }
 
 if __name__ == "__main__":
-    gensen: object = ゲンセン()
-
-    # print(gensen.user_asset_validator(asset="bitcoin"))
-
-    print(
-        gensen.convert_asset_to_brl(
-            # asset="bitcoin", brl_asset=354449, available_balance=0.00139909
-            asset="bitcoin", brl_asset=353241, available_balance=0.00139909
-        )
-    )
+    asyncio.run(main())
