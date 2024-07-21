@@ -44,7 +44,8 @@ class Gensen(commands.Bot):
     async def on_ready(self):
         await self.change_presence(
             activity=discord.Activity(
-                type=ActivityType.playing, name="Trading"
+                type=ActivityType.watching,
+                name=data_options["bot_configs"]["activity"]
             )
         )
 

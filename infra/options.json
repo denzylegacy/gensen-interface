@@ -6,6 +6,7 @@
         "channel_bot_erro": 1262569124199137391,
         "sync_guild_id": 1262568793968873596,
         "prefix": "g!",
+        "activity": "Cryptocurrencies",
         "premium_channel_support": 1262569380865114213,
         "role_client_premium_id": "premium",
         "set_language": "O idioma foi definido para {0} com sucesso!",
