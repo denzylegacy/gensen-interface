@@ -82,7 +82,6 @@ class Gensen(commands.Bot):
                            ephemeral=True)
         elif isinstance(error, commands.MessageNotFound):
             await ctx.send("> Message not found 😪", ephemeral=True)
-
         elif isinstance(error, commands.CheckFailure):
             await ctx.send("This command is only available to verified members!!", ephemeral=True)
         else:

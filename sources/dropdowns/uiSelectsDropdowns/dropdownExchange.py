@@ -3,7 +3,11 @@ from local_io import JSONHandler
 import asyncio
 from pathlib import Path
 import traceback
+from sources.embeds import CustomEmbed
+from utils.utilities import UniqueIdGenerator
 
+
+data_options = JSONHandler(file_path="./infra/options.json").read_json()
 # from sources.dropdowns.dropdown import DropdownView
 
 
@@ -45,8 +49,7 @@ class DropdownExchange(discord.ui.Select):
             view.interaction = interaction
 
             if int(view.value) == 0:
-                from sources.buttons.exchange_button import ExchangeManagementButtons
-                from sources.embeds import CustomEmbed
+                from sources.dropdowns.dropdown import DropdownView
 
                 embed = (
                     CustomEmbed(
@@ -59,7 +62,27 @@ class DropdownExchange(discord.ui.Select):
                 	.create_embed()
                 )
 
-                await interaction.followup.send(embed=embed, view=ExchangeManagementButtons(), ephemeral=True)
+                unique_id = UniqueIdGenerator.generate_unique_custom_id()
+                options = data_options["dropdown_exchange_settings"]["dropdown"]
+                
+                view = DropdownView(
+                    options, 
+                    dropdown_name="DropdownExchangeSettings",
+                    placeholder=data_options["dropdown_exchange_settings"]["dropdown_placeholder"], 
+                    custom_id_dropdown=f"dropdown_{unique_id}",
+                    custom_id_button=unique_id
+                )
+                
+                embed = (
+                    CustomEmbed(
+                        "Foxbit Settings",
+                        "Connect Gensen to your Foxbit account by adding the API keys which can be obtained from the [official website](https://app.foxbit.com.br/profile/api-key)."
+                    )
+                    .set_image("https://cdn.pfps.gg/banners/1785-chainsaw-man-cinema.gif")
+                    .create_embed()
+                )
+                
+                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
             elif int(view.value) == 1:
                 await interaction.followup.send(
                     f"Esta funcionalidade ainda não foi desenvolvida.", ephemeral=True

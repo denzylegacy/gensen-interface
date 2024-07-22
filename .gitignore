@@ -582,3 +582,5 @@ $RECYCLE.BIN/
 /myenv
 infra/uuidgensen-firebase-adminsdk-odnzh-1be5bd0dcb.json
 sources/tasks/script.py
+infra/options_dev.json
+

@@ -37,5 +37,16 @@
         "dropdown": [
             ["Foxbit", "Brazilian Exchange", "🦊"]
         ]
-     }
+     },
+     "dropdown_exchange_settings": {
+         "dropdown_placeholder": "Available options",
+         "description": "> Hey, please select one of the available options!!",
+         "dropdown": [
+            ["API KEYs", "Add/update your API keys", "🔐"],
+            ["VIEW CRYPTOS", "View your cryptos", "🔍"],
+            ["ADD/UPDATE CRYPTO", "Add/update your cryptos", "🈳"],
+            ["DISCONNECT CRYPTO", "Disconnect a cryptos", "🈲"],
+            ["DISCONNECT EXCHANGE", "Disconnect the exchange", "🈲"]
+         ]
+      }
  }

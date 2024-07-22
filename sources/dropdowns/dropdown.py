@@ -1,5 +1,7 @@
 import discord
-from sources.dropdowns.uiSelectsDropdowns import DropdownExchange, DropdownAsset
+from sources.dropdowns.uiSelectsDropdowns import (
+    DropdownExchange, DropdownAsset, DropdownExchangeSettings
+)
 
 
 class DropdownView(discord.ui.View):
@@ -28,6 +30,17 @@ class DropdownView(discord.ui.View):
 		elif self.dropdown_name == "DropdownAsset":
 			self.add_item(
 				DropdownAsset(
+					args, 
+					placeholder=placeholder, 
+					min_values=min_values, 
+					max_values=max_values, 
+					custom_id_dropdown=self.custom_id_dropdown, 
+					custom_id_button=self.custom_id_button
+				)
+			)
+		elif self.dropdown_name == "DropdownExchangeSettings":
+			self.add_item(
+				DropdownExchangeSettings(
 					args, 
 					placeholder=placeholder, 
 					min_values=min_values, 

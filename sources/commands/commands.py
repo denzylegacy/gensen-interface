@@ -12,7 +12,8 @@ from infra.settings import BASE_PATH
 from utils.utilities import UniqueIdGenerator
 from sources.decorators import authenticate
 from sources.embeds import CustomEmbed
-from sources.dropdowns import DropdownView
+from sources.dropdowns.dropdown import DropdownView
+
 
 data_options = JSONHandler(file_path="./infra/options.json").read_json()
 
