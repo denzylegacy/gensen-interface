@@ -45,8 +45,8 @@
             ["API KEYs", "Add/update your API keys", "🔐"],
             ["VIEW CRYPTOS", "View your cryptos", "🔍"],
             ["ADD/UPDATE CRYPTO", "Add/update your cryptos", "🈳"],
-            ["DISCONNECT CRYPTO", "Disconnect a cryptos", "🈲"],
-            ["DISCONNECT EXCHANGE", "Disconnect the exchange", "🈲"]
+            ["DISCONNECT CRYPTO", "Disconnect a crypto", "🈲"],
+            ["DISCONNECT EXCHANGE", "Disconnect this exchange", "🈲"]
          ]
       }
  }
