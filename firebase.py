@@ -5,7 +5,7 @@ import json
 import firebase_admin
 from typing import Union
 from firebase_admin import credentials, db, initialize_app
-from infra import log, FIREBASE_API_KEY
+from infra import log, FIREBASE_URL, FIREBASE_API_KEY
 
 
 class Firebase:
@@ -14,7 +14,7 @@ class Firebase:
     def firebase_launcher(_credentials: credentials.Certificate) -> bool:
             if not firebase_admin._apps:
                 initialize_app(
-                    _credentials, {"databaseURL": "https://uuidgensen-default-rtdb.firebaseio.com/"}
+                    _credentials, {"databaseURL": FIREBASE_URL}
                 )
 
     def __init__(self) -> None:
@@ -30,7 +30,7 @@ class Firebase:
                         "infra/uuidgensen-firebase-adminsdk-odnzh-1be5bd0dcb.json"
                     )
                 )
-            
+
             return db.reference(reference_path)
         except Exception as e:
             log.error(f"Error establishing Firebase connection: {e}")
