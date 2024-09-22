@@ -27,14 +27,16 @@ class BackgroundTasks(commands.Cog):
 
         users = connection.child("users").get()
         
-        print(self.messengers)
-        
         if not users:
             return
 
+        print(users)
+        
         for user in users.keys():
             for messenger in self.messengers:
                 user_messages = connection.child(f"users/{user}/messages/{messenger}")
+
+                print("user_messages", user_messages)
                 
                 if not user_messages.get():
                     return
