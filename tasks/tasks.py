@@ -33,20 +33,18 @@ class BackgroundTasks(commands.Cog):
         for user in users.keys():
             for messenger in self.messengers:
                 user_messages = connection.child(f"users/{user}/messages")
-
-                print("user_messages", user_messages.get())
                 
                 if not user_messages.get():
                     return
                 
-                for message in users[user]["messages"][messenger].keys():
+                for message in user_messages.keys():
                     ### DM NOTIFICATION ###
     
                     log.info(f"[NOTIFYING {user}]: {message}")
                     
                     embed = discord.Embed(
-                        title=users[user]["messages"][messenger][message]["title"],
-                        description=users[user]["messages"][messenger][message]["description"],
+                        title=message["title"],
+                        description=message["description"],
                         color=0xffa07a
                     )
     
@@ -58,7 +56,7 @@ class BackgroundTasks(commands.Cog):
     
                     await self.bot.get_user(int(user)).send(embed=embed)
     
-                    connection.child(f"users/{user}/messages/{messenger}/{message}").delete()
+                    connection.child(message).delete()
 
     @tasks.loop(seconds=60)
     async def background_tasks(self):
