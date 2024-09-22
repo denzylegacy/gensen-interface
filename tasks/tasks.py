@@ -37,7 +37,7 @@ class BackgroundTasks(commands.Cog):
                 if not user_messages.get():
                     return
                 
-                for message in user_messages.keys():
+                for message in user_messages.key():
                     ### DM NOTIFICATION ###
     
                     log.info(f"[NOTIFYING {user}]: {message}")
