@@ -26,25 +26,27 @@ class BackgroundTasks(commands.Cog):
         connection = firebase.firebase_connection("root")
 
         users = connection.child("users").get()
-        
+
         if not users:
             return
-        
+
         for user in users.keys():
             for messenger in self.messengers:
-                user_messages = connection.child(f"users/{user}/messages")
+                user_messages = connection.child(f"users/{user}/messages/{messenger}")
+
+                print("user_messages.get()", user_messages.get())
                 
                 if not user_messages.get():
                     return
-                
-                for message in user_messages.key():
+            
+                for message in users[user]["messages"][messenger].keys():
                     ### DM NOTIFICATION ###
     
                     log.info(f"[NOTIFYING {user}]: {message}")
                     
                     embed = discord.Embed(
-                        title=message["title"],
-                        description=message["description"],
+                        title=users[user]["messages"][messenger][message]["title"],
+                        description=users[user]["messages"][messenger][message]["description"],
                         color=0xffa07a
                     )
     
@@ -56,7 +58,8 @@ class BackgroundTasks(commands.Cog):
     
                     await self.bot.get_user(int(user)).send(embed=embed)
     
-                    connection.child(message).delete()
+                    connection.child(f"users/{user}/messages/{messenger}/{message}").delete()
+
 
     @tasks.loop(seconds=60)
     async def background_tasks(self):
