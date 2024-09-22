@@ -18,15 +18,17 @@ class BackgroundTasks(commands.Cog):
     async def on_ready(self):
         await self.background_tasks.start()
 
-    async def market_conditions_evaluator(self):
-        log.info(f"[background_tasks] market_conditions_evaluator: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    async def messages(self):
+        log.info(f"[background_tasks] messages: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         
         firebase = Firebase()
         
         connection = firebase.firebase_connection("root")
 
         users = connection.child("users").get()
-
+        
+        print(self.messengers)
+        
         if not users:
             return
 
@@ -36,11 +38,13 @@ class BackgroundTasks(commands.Cog):
                 
                 if not user_messages.get():
                     return
-            
+                
+                print(self.messengers)
+                
                 for message in users[user]["messages"][messenger].keys():
                     ### DM NOTIFICATION ###
     
-                    log.info(f"[INSTANT ORDER NOTIFICATION] {message} -> {user}")
+                    log.info(f"[NOTIFYING {user}]: {message}")
                     
                     embed = discord.Embed(
                         title=users[user]["messages"][messenger][message]["title"],
@@ -60,7 +64,7 @@ class BackgroundTasks(commands.Cog):
 
     @tasks.loop(seconds=60)
     async def background_tasks(self):
-        await self.market_conditions_evaluator()
+        await self.messages()
 
 
 async def setup(bot: commands.Bot) -> None:
