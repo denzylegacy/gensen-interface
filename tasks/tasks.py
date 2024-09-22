@@ -34,7 +34,7 @@ class BackgroundTasks(commands.Cog):
             for messenger in self.messengers:
                 user_messages = connection.child(f"users/{user}/messages/{messenger}")
 
-                print("user_messages.get()", user_messages.get())
+                print("user_messages", users[user]["messages"][messenger].keys())
                 
                 if not user_messages.get():
                     return
