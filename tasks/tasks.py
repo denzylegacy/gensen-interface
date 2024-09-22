@@ -12,6 +12,7 @@ class BackgroundTasks(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.messengers: list = ["gensen", "keyripper"]
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -30,31 +31,32 @@ class BackgroundTasks(commands.Cog):
             return
 
         for user in users.keys():
-            user_gensen_messages = connection.child(f"users/{user}/messages/gensen")
-            
-            if not user_gensen_messages.get():
-                return
-        
-            for message in users[user]["messages"]["gensen"].keys():
-                ### DM NOTIFICATION ###
-
-                log.info(f"[INSTANT ORDER NOTIFICATION] {message} -> {user}")
+            for messenger in self.messengers:
+                user_messages = connection.child(f"users/{user}/messages/{messenger}")
                 
-                embed = discord.Embed(
-                    title=users[user]["messages"]["gensen"][message]["title"],
-                    description=users[user]["messages"]["gensen"][message]["description"],
-                    color=0xffa07a
-                )
-
-                embed.add_field(
-                    name="",
-                    value="If you believe this is a mistake, please contact my developer!",
-                    inline=False
-                )
-
-                await self.bot.get_user(int(user)).send(embed=embed)
-
-                connection.child(f"users/{user}/messages/gensen/{message}").delete()
+                if not user_messages.get():
+                    return
+            
+                for message in users[user]["messages"][messenger].keys():
+                    ### DM NOTIFICATION ###
+    
+                    log.info(f"[INSTANT ORDER NOTIFICATION] {message} -> {user}")
+                    
+                    embed = discord.Embed(
+                        title=users[user]["messages"][messenger][message]["title"],
+                        description=users[user]["messages"][messenger][message]["description"],
+                        color=0xffa07a
+                    )
+    
+                    embed.add_field(
+                        name="",
+                        value="If you believe this is a mistake, please contact my developer!",
+                        inline=False
+                    )
+    
+                    await self.bot.get_user(int(user)).send(embed=embed)
+    
+                    connection.child(f"users/{user}/messages/{messenger}/{message}").delete()
 
     @tasks.loop(seconds=180)
     async def background_tasks(self):
