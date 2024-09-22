@@ -58,7 +58,7 @@ class BackgroundTasks(commands.Cog):
     
                     connection.child(f"users/{user}/messages/{messenger}/{message}").delete()
 
-    @tasks.loop(seconds=180)
+    @tasks.loop(seconds=60)
     async def background_tasks(self):
         await self.market_conditions_evaluator()
 
