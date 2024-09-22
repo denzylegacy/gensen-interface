@@ -32,7 +32,7 @@ class BackgroundTasks(commands.Cog):
         
         for user in users.keys():
             for messenger in self.messengers:
-                user_messages = connection.child(f"users/{user}/messages/{messenger}")
+                user_messages = connection.child(f"users/{user}/messages")
 
                 print("user_messages", user_messages.get())
                 
