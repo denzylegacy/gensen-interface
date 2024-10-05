@@ -1,17 +1,14 @@
 {
      "bot_configs": {
-        "client_id": 1205621013417693205,
-        "channel_log": 1262569049900974080,
-        "channel_ticket_log": 1262569092619964509,
-        "channel_bot_erro": 1262569124199137391,
-        "sync_guild_id": 1262568793968873596,
+        "client_id": 1291912258997452941,
+        "channel_log": 1291919316073320559,
+        "channel_bot_erro": 1291919420855423041,
+        "sync_guild_id": 1291915099476459530,
         "prefix": "g!",
         "activity": "Cryptos",
-        "premium_channel_support": 1262569380865114213,
-        "role_client_premium_id": "premium",
         "set_language": "The language has been set to {0} successfully!",
-        "channel_trading": 1262569655222927371,
-        "channel_trading_log": 1262569988611506227
+        "channel_trading": 1291919608856711208,
+        "channel_trading_log": 1291919677412343860
     },
      "general_cmd": {
          "sync_error_semicolon": "You need to separate it with ';' (semicolon)!"
