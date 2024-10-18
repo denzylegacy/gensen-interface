@@ -61,7 +61,10 @@ class BackgroundTasks(commands.Cog):
 
     @tasks.loop(seconds=60)
     async def background_tasks(self):
-        await self.messages()
+        try:
+            await self.messages()
+        except Exception as error:
+            print(error)
 
 
 async def setup(bot: commands.Bot) -> None:
