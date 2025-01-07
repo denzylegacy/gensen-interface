@@ -24,8 +24,8 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
         max_length=30
     )
 
-    base_balance = TextInput(
-        label="Base Balance (BRL)",
+    standby_balance = TextInput(
+        label="Standby Balance (BRL)",
         placeholder="100 (Enter digits only!)",
         required=True,
         max_length=4
@@ -34,7 +34,7 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
     async def on_submit(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
 
-        if not self.base_balance.value.isdigit():
+        if not self.standby_balance.value.isdigit():
             embed = discord.Embed(
                 title="Watch out!",
                 description="The **Base Balance (BRL)** and **Fixed Profit (BRL)** fields must **only** be filled in with numbers!!",
@@ -77,8 +77,8 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
         ).get()
 
         new_standby_balance = (
-            float(self.base_balance.value) + float(_standby_balance) 
-            if _standby_balance else float(self.base_balance.value)
+            float(self.standby_balance.value) + float(_standby_balance) 
+            if _standby_balance else float(self.standby_balance.value)
         )
         
         timestamp = datetime.datetime.now(
@@ -98,7 +98,7 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
 
         resp = (
             f"Asset: {currency_name.upper()}\n"
-            f"Base Balance (BRL): {self.base_balance.value}"
+            f"Standby Balance (BRL): {self.standby_balance.value}"
         )
 
         embed = discord.Embed(title="Successfully registered!", description=resp, color=0x6AA84F)
