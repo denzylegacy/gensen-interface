@@ -80,10 +80,17 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
             f"users/{interaction.user.id}/exchanges/foxbit/cryptocurrencies/{currency['symbol'].lower()}/base_balance"
         ).get()
 
+        _initial_profit = self.connection.child(
+            f"users/{interaction.user.id}/exchanges/foxbit/cryptocurrencies/{currency['symbol'].lower()}/initial_profit"
+        ).get()
+
         new_standby_balance = (
             float(self.standby_balance.value) + float(_standby_balance) 
             if _standby_balance else float(self.standby_balance.value)
         )
+        
+        if not _initial_profit and _base_balance:
+            new_standby_balance += float(_base_balance)
         
         timestamp = datetime.datetime.now(
             pytz.timezone("America/Sao_Paulo")
@@ -94,7 +101,7 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
         ).update(
             {
                 "name": currency["name"],
-                f"{'base_balance' if not _base_balance else 'standby_balance'}": new_standby_balance,
+                f"{'base_balance' if not _base_balance or not _initial_profit else 'standby_balance'}": new_standby_balance,
                 "update_timestamp_america_sp": timestamp
             }
         )
