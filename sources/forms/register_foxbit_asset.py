@@ -31,17 +31,10 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
         max_length=4
     )
 
-    fixed_profit_brl = TextInput(
-        label="Fixed Profit (BRL)",
-        placeholder="5 (Enter digits only!)",
-        required=True,
-        max_length=4
-    )
-
     async def on_submit(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
 
-        if not self.base_balance.value.isdigit() or not self.fixed_profit_brl.value.isdigit():
+        if not self.base_balance.value.isdigit():
             embed = discord.Embed(
                 title="Watch out!",
                 description="The **Base Balance (BRL)** and **Fixed Profit (BRL)** fields must **only** be filled in with numbers!!",
@@ -79,9 +72,14 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
             )
             return
 
-        user_assets = connection.child(
-            f"users/{interaction.user.id}/exchanges/foxbit/cryptocurrencies"
+        _standby_balance = connection.child(
+            f"users/{interaction.user.id}/exchanges/foxbit/cryptocurrencies/{currency['symbol'].lower()}/standby_balance"
         ).get()
+
+        new_standby_balance = (
+            float(self.base_balance.value) + float(_standby_balance) 
+            if _standby_balance else float(self.base_balance.value)
+        )
         
         timestamp = datetime.datetime.now(
             pytz.timezone("America/Sao_Paulo")
@@ -92,8 +90,7 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
         ).update(
             {
                 "name": currency["name"],
-                "base_balance": float(self.base_balance.value),
-                "fixed_profit_brl": float(self.fixed_profit_brl.value),
+                "standby_balance": new_standby_balance,
                 "update_timestamp_america_sp": timestamp
             }
         )
@@ -101,8 +98,7 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
 
         resp = (
             f"Asset: {currency_name.upper()}\n"
-            f"Base Balance (BRL): {self.base_balance.value}\n"
-            f"Fixed Profit (BRL): {self.fixed_profit_brl.value}"
+            f"Base Balance (BRL): {self.base_balance.value}"
         )
 
         embed = discord.Embed(title="Successfully registered!", description=resp, color=0x6AA84F)

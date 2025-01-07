@@ -27,7 +27,7 @@ class Firebase:
             else:
                 self.firebase_launcher(
                     credentials.Certificate(
-                        "infra/uuidgensen-firebase-adminsdk-odnzh-1be5bd0dcb.json"
+                        "infra/uuidgensen-firebase-adminsdk-odnzh-5ed08da175.json"
                     )
                 )
 

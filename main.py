@@ -55,8 +55,9 @@ class Gensen(commands.Bot):
         await self.process_commands(message)
 
     async def on_command_error(self, ctx, error):
-        if not ctx.interaction.response.is_done():
-            await ctx.defer(ephemeral=True)
+        if ctx.interaction:
+            if not ctx.interaction.response.is_done():
+                await ctx.defer(ephemeral=True)
         
         if isinstance(error, commands.CommandNotFound):
             await ctx.send("> Comando não encontrado!!", ephemeral=True)
