@@ -80,7 +80,7 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
             f"users/{interaction.user.id}/exchanges/foxbit/cryptocurrencies/{currency['symbol'].lower()}/base_balance"
         ).get()
 
-        _initial_profit = self.connection.child(
+        _initial_profit = connection.child(
             f"users/{interaction.user.id}/exchanges/foxbit/cryptocurrencies/{currency['symbol'].lower()}/initial_profit"
         ).get()
 
