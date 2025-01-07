@@ -76,6 +76,10 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
             f"users/{interaction.user.id}/exchanges/foxbit/cryptocurrencies/{currency['symbol'].lower()}/standby_balance"
         ).get()
 
+        _base_balance = connection.child(
+            f"users/{interaction.user.id}/exchanges/foxbit/cryptocurrencies/{currency['symbol'].lower()}/base_balance"
+        ).get()
+
         new_standby_balance = (
             float(self.standby_balance.value) + float(_standby_balance) 
             if _standby_balance else float(self.standby_balance.value)
@@ -90,7 +94,7 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
         ).update(
             {
                 "name": currency["name"],
-                "standby_balance": new_standby_balance,
+                f"{'base_balance' if not _base_balance else 'standby_balance'}": new_standby_balance,
                 "update_timestamp_america_sp": timestamp
             }
         )
