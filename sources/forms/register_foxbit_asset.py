@@ -8,7 +8,7 @@ from local_io import JSONHandler
 from firebase import Firebase
 from infra import log
 from api.foxbit import Foxbit
-import asyncio
+from api.coingecko import Coingecko
 from utils.encryptor import Encryptor
 
 textstyle = Utilities().textstyle
@@ -68,6 +68,17 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
         if not currency:
             await interaction.followup.send(
                 "The cryptocurrency you are looking for is not registered with Foxbit! Please try again later or contact my developers.",
+                ephemeral=True
+            )
+            return
+
+        coingecko: object = Coingecko()
+        
+        coingecko_checker = coingecko.coin_data_by_id(coind_id=currency_name)
+        
+        if not coingecko_checker:
+            await interaction.followup.send(
+                "The cryptocurrency you are looking for is not being returned by the Coingecko API :( Please try again later or contact my developers.",
                 ephemeral=True
             )
             return
