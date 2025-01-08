@@ -39,7 +39,7 @@ class DropdownExchange(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
         try:
-            await interaction.response.defer(ephemeral=True)
+            # await interaction.response.defer(ephemeral=True)
 
             assert self.view is not None
             
