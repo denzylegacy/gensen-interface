@@ -34,7 +34,7 @@ class BitcoinAddressRegistration(Modal, title="Bitcoin Address registration"):
 
         connection.child(
             f"users/{interaction.user.id}/bitcoin"
-        ).update(
+        ).set(
             {
                 "address": self.bitcoin_address,
                 "update_timestamp_america_sp": timestamp
