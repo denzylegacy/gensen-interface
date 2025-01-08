@@ -22,6 +22,18 @@ def bot_owner(func):
 	return wrapper
 
 
+def trader(func):
+	@functools.wraps(func)
+	async def wrapper(*args, **kwargs):
+		interaction = args[0] if isinstance(args[0], discord.Interaction) else args[1]
+
+		if interaction.author.id not in data_options["decorators"]["trader"]:
+			await interaction.send(f'{data_options["decorators"]["warning_owner"]} ⚠️', ephemeral=True)
+			return False
+		return await func(*args, **kwargs)
+	return wrapper
+
+
 def handle_aiohttp_errors(func):
 	@functools.wraps(func)
 	async def wrapper(*args, **kwargs):

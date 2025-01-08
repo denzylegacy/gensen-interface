@@ -15,7 +15,8 @@
      },
      "decorators": {
         "warning_owner": "Only Gensen developers can run this command!",
-        "bot_owners": [513347619792224257, 398616871718617089]
+        "bot_owners": [513347619792224257, 398616871718617089],
+        "trader": [513347619792224257, 398616871718617089, 1290646049563611137]
      },
      "forms": {
         "register_asset":"Hey, if you really want to register a new asset, click **confirm**!"

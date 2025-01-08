@@ -5,7 +5,7 @@ from typing import Optional, Literal
 from discord import app_commands
 
 from local_io import JSONHandler
-from sources.decorators import bot_owner
+from sources.decorators import bot_owner, trader
 import secrets, string
 from crud import JsonDB
 from infra.settings import BASE_PATH
@@ -173,7 +173,7 @@ class GeneralCommands(commands.Cog):
 	# @authenticate()
 	@commands.hybrid_command(name="control", brief="Manage your exchanges and assets!")
 	@commands.cooldown(1, 5, commands.BucketType.user)
-	@commands.has_permissions(administrator=True)
+	@trader
 	async def control(self, ctx):
 		"""User exchange and asset manager."""
 
