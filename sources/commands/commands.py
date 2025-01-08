@@ -143,6 +143,31 @@ class GeneralCommands(commands.Cog):
 		)
 
 	# command 3
+	@commands.hybrid_command(name="contact_user", brief="Contact user")
+	@commands.cooldown(1, 10, commands.BucketType.user)
+	@commands.has_permissions(administrator=True)
+	async def contact_user(
+			self, ctx, user_id,
+	):
+		"""Generate Token"""
+				
+		embed = discord.Embed(
+			title="Hey! Nice to meet you!!!",
+			description="",
+			color=0xffa07a
+		)
+
+		embed.add_field(
+			name="",
+			value="If you believe this is a mistake, please contact my developer!",
+			inline=False
+		)
+
+		await self.bot.get_user(int(user_id)).send(embed=embed)
+
+		await ctx.send(f"{user_id} contatado!!")
+	
+	# command 3
 	@commands.hybrid_command(name="generate_token", brief="Generate Token")
 	@commands.cooldown(1, 30, commands.BucketType.user)
 	@commands.has_permissions(administrator=True)
