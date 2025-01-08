@@ -153,7 +153,7 @@ class GeneralCommands(commands.Cog):
 		"""Contact a user"""
 				
 		embed = discord.Embed(
-			title="Hey! Nice to meet you!!!",
+			title="Hey! Nice to see you!!!",
 			description="",
 			color=0xffa07a
 		)
