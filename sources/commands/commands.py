@@ -169,14 +169,15 @@ class GeneralCommands(commands.Cog):
 		
 		if user is None:
 			await ctx.send("Usuário não encontrado.")
-		        return
+			return
+		
 		try:
 			await user.send(embed=embed)
-		        await ctx.send("Message sent successfully!")
+			await ctx.send("Message sent successfully!")
 		except discord.Forbidden:
-		        await ctx.send("I couldn't send a DM to this user. They can have DMs disabled.")
-		    except Exception as e:
-		        await ctx.send(f"An error occurred while trying to send the message: {e}")
+			await ctx.send("I couldn't send a DM to this user. They can have DMs disabled.")
+		except Exception as e:
+			await ctx.send(f"An error occurred while trying to send the message: {e}")
 	
 	# command 3
 	@commands.hybrid_command(name="generate_token", brief="Generate Token")
