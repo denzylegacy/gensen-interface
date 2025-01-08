@@ -101,7 +101,7 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
         ).update(
             {
                 "name": currency["name"],
-                f"{'base_balance' if not _base_balance or not _initial_profit else 'standby_balance'}": new_standby_balance,
+                "standby_balance": new_standby_balance,
                 "update_timestamp_america_sp": timestamp
             }
         )
