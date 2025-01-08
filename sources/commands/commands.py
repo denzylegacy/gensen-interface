@@ -151,7 +151,7 @@ class GeneralCommands(commands.Cog):
 	async def contact_user(
 			self, ctx, user_id,
 	):
-		"""Generate Token"""
+		"""Contact a user"""
 				
 		embed = discord.Embed(
 			title="Hey! Nice to meet you!!!",
@@ -166,8 +166,6 @@ class GeneralCommands(commands.Cog):
 		)
 
 		await self.bot.get_user(int(user_id)).send(embed=embed)
-
-		await ctx.send(f"{user_id} contatado!!")
 	
 	# command 3
 	@commands.hybrid_command(name="generate_token", brief="Generate Token")
