@@ -6,7 +6,7 @@ from discord.ui import Modal, TextInput
 from utils.utils import Utilities
 from local_io import JSONHandler
 from firebase import Firebase
-from infra import log
+from infra import log, COINGECKO_API_KEY
 from api.foxbit import Foxbit
 from api.coingecko import Coingecko
 from utils.encryptor import Encryptor
@@ -71,8 +71,8 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
                 ephemeral=True
             )
             return
-
-        coingecko: object = Coingecko()
+        
+        coingecko: object = Coingecko(coingecko_api_key=COINGECKO_API_KEY)
         
         coingecko_checker = coingecko.coin_data_by_id(coind_id=currency_name)
         

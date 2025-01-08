@@ -2,6 +2,7 @@
 
 import requests
 from requests.models import Response
+import time
 from infra import log
 
 
@@ -21,6 +22,8 @@ class Coingecko:
 
         response = requests.get(url=f"{self.coingecko_api_url}/ping", headers=headers)
 
+        time.sleep(3)
+        
         if response.status_code == 200:
             return response.status_code
         else:
