@@ -33,6 +33,7 @@
         "dropdown_placeholder": "Available options",
         "description": "> Hey, please select one of the available options!!",
         "dropdown": [
+            ["Bitcoin", "Add/update Bitcoin Address", "🔗"],
             ["Foxbit", "Brazilian Exchange", "🦊"]
         ]
      },

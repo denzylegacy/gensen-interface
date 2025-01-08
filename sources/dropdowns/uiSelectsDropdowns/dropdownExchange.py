@@ -5,7 +5,7 @@ from pathlib import Path
 import traceback
 from sources.embeds import CustomEmbed
 from utils.utilities import UniqueIdGenerator
-
+from sources.forms.register_bitcoin_address import BitcoinAddressRegistration
 
 data_options = JSONHandler(file_path="./infra/options.json").read_json()
 # from sources.dropdowns.dropdown import DropdownView
@@ -83,10 +83,11 @@ class DropdownExchange(discord.ui.Select):
                 )
                 
                 await interaction.followup.send(embed=embed, view=view, ephemeral=True)
-            elif int(view.value) == 1:
-                await interaction.followup.send(
-                    f"Esta funcionalidade ainda não foi desenvolvida.", ephemeral=True
-                )
+            elif int(view.value) == 1:  # ADD/UPDATE BITCOIN ADDRESS
+                try:
+                    await interaction.response.send_modal(BitcoinAddressRegistration())
+                except:
+                    print(traceback.format_exc())
         except Exception as e:
             print(f"An error occurred: {e}")
             tb = traceback.format_exc()

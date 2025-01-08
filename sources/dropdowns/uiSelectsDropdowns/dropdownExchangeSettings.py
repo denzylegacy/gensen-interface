@@ -6,7 +6,6 @@ from infra import log
 from firebase import Firebase
 from sources.forms.register_foxbit_api_keys import FoxbitApiKeysRegistration
 from sources.forms.register_foxbit_asset import FoxbitAssetRegistration
-from sources.forms.register_bitcoin_address import BitcoinAddressRegistration
 
 data_options = JSONHandler(file_path="./infra/options.json").read_json()
 
@@ -51,12 +50,7 @@ class DropdownExchangeSettings(discord.ui.Select):
                     await interaction.response.send_modal(FoxbitApiKeysRegistration())
                 except:
                     log.error(traceback.format_exc())
-            elif int(view.value) == 1:  # ADD/UPDATE BITCOIN ADDRESS
-                try:
-                    await interaction.response.send_modal(BitcoinAddressRegistration())
-                except:
-                    log.error(traceback.format_exc())
-            elif int(view.value) == 2:  # VIEW CRYPTOS
+            elif int(view.value) == 1:  # VIEW CRYPTOS
                 try:
                     await interaction.response.defer(ephemeral=True)
                     await interaction.followup.send(
@@ -64,12 +58,12 @@ class DropdownExchangeSettings(discord.ui.Select):
                     )
                 except:
                     log.error(traceback.format_exc())
-            elif int(view.value) == 3:  # ADD/UPDATE CRYPTO
+            elif int(view.value) == 2:  # ADD/UPDATE CRYPTO
                 try:
                     await interaction.response.send_modal(FoxbitAssetRegistration())
                 except:
                     log.error(traceback.format_exc())
-            elif int(view.value) == 4:  # DISCONNECT CRYPTO
+            elif int(view.value) == 3:  # DISCONNECT CRYPTO
                 try:
                     await interaction.response.defer(ephemeral=True)
                     await interaction.followup.send(
@@ -77,7 +71,7 @@ class DropdownExchangeSettings(discord.ui.Select):
                     )
                 except:
                     log.error(traceback.format_exc())
-            elif int(view.value) == 5:  # DISCONNECT EXCHANGE
+            elif int(view.value) == 4:  # DISCONNECT EXCHANGE
                 await interaction.response.defer(ephemeral=True)
                 
                 try:
