@@ -28,8 +28,7 @@ class GeneralCommands(commands.Cog):
 	# command 1
 	@commands.hybrid_command(name="sync", brief="Sync commands")
 	@commands.cooldown(1, 10, commands.BucketType.user)
-	@app_commands.guilds(MY_GUILD_ID)
-	@commands.has_permissions(administrator=True)
+	# @app_commands.guilds(MY_GUILD_ID)
 	@bot_owner
 	async def sync(
 			self,
@@ -125,7 +124,7 @@ class GeneralCommands(commands.Cog):
 	# command 2
 	@commands.hybrid_command(name="create_invite", brief="Create Invitation")
 	@commands.cooldown(1, 30, commands.BucketType.user)
-	@commands.has_permissions(administrator=True)
+	# @commands.has_permissions(administrator=True)
 	@bot_owner
 	async def create_invite(
 			self, ctx, reason=None, max_age=0, max_uses=0, temporary=False,
@@ -170,7 +169,7 @@ class GeneralCommands(commands.Cog):
 	# command 3
 	@commands.hybrid_command(name="generate_token", brief="Generate Token")
 	@commands.cooldown(1, 30, commands.BucketType.user)
-	@commands.has_permissions(administrator=True)
+	# @commands.has_permissions(administrator=True)
 	@bot_owner
 	async def generate_token(
 			self, ctx, characters=50, case_sensitivity=False, upper_case=False
@@ -199,7 +198,7 @@ class GeneralCommands(commands.Cog):
 	# @authenticate()
 	@commands.hybrid_command(name="control", brief="Manage your exchanges and assets!")
 	@commands.cooldown(1, 5, commands.BucketType.user)
-	@bot_owner
+	# @bot_owner
 	@trader
 	async def control(self, ctx):
 		"""User exchange and asset manager."""
