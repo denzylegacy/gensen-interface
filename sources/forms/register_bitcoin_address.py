@@ -22,8 +22,6 @@ class BitcoinAddressRegistration(Modal, title="Bitcoin Address registration"):
     )
 
     async def on_submit(self, interaction: discord.Interaction):
-        await interaction.response.defer(ephemeral=True)
-
         firebase = Firebase()
 
         connection = firebase.firebase_connection("root")
@@ -36,10 +34,11 @@ class BitcoinAddressRegistration(Modal, title="Bitcoin Address registration"):
             f"users/{interaction.user.id}/bitcoin"
         ).update(
             {
-                "address": self.bitcoin_address,
+                "address": self.bitcoin_address.value,
                 "update_timestamp_america_sp": timestamp
             }
         )
+
         log.info(f"[REGISTERED] {self.bitcoin_address} -> {interaction.user.name} ({interaction.user.id})")
 
         resp = (
