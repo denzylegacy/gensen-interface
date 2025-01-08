@@ -145,7 +145,7 @@ class GeneralCommands(commands.Cog):
 	# command 3
 	@commands.hybrid_command(name="contact_user", brief="Contact user")
 	@commands.cooldown(1, 10, commands.BucketType.user)
-	@commands.has_permissions(administrator=True)
+	# @commands.has_permissions(administrator=True)
 	@bot_owner
 	async def contact_user(
 			self, ctx, user_id,
