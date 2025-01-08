@@ -44,8 +44,6 @@ class DropdownExchange(discord.ui.Select):
 
             view.value = self.labels.index(self.values[0])
             view.interaction = interaction
-
-            print(f"chones option: {view.value}")
             
             if int(view.value) == 0:  # ADD/UPDATE BITCOIN ADDRESS
                 try:
@@ -55,7 +53,7 @@ class DropdownExchange(discord.ui.Select):
             elif int(view.value) == 1:
                 try:
                     await interaction.response.defer(ephemeral=True)
-                    
+
                     from sources.dropdowns.dropdown import DropdownView
 
                     embed = (
