@@ -82,6 +82,12 @@ class FoxbitAssetRegistration(Modal, title="Asset registration"):
                 ephemeral=True
             )
             return
+        if currency_name == "bitcoin":
+            await interaction.followup.send(
+                "Bitcoin cannot be included in your portfolio!",
+                ephemeral=True
+            )
+            return
 
         _standby_balance = connection.child(
             f"users/{interaction.user.id}/exchanges/foxbit/cryptocurrencies/{currency['symbol'].lower()}/standby_balance"
