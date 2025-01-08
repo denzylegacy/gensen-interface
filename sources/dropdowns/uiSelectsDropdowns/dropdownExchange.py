@@ -57,8 +57,8 @@ class DropdownExchange(discord.ui.Select):
                         "Connect Gensen to your Foxbit account by adding the API keys which can be obtained from the [official website](https://app.foxbit.com.br/profile/api-key);\n\n"
                         "Link a new crypto asset to your portfolio;\n\n"
                         "Completely remove the data from your exchange account in Gensen's database by clicking disconnect."
-                    ) # https://cdn.pfps.gg/banners/9031-toney.gif
-                	.set_image("https://cdn.pfps.gg/banners/1785-chainsaw-man-cinema.gif")
+                    ) #  https://cdn.pfps.gg/banners/1785-chainsaw-man-cinema.gif
+                	.set_image("https://cdn.pfps.gg/banners/9031-toney.gif")
                 	.create_embed()
                 )
 
@@ -78,7 +78,7 @@ class DropdownExchange(discord.ui.Select):
                         "Foxbit Settings",
                         "Connect Gensen to your Foxbit account by adding the API keys which can be obtained from the [official website](https://app.foxbit.com.br/profile/api-key)."
                     )
-                    .set_image("https://cdn.pfps.gg/banners/1785-chainsaw-man-cinema.gif")
+                    .set_image("https://cdn.pfps.gg/banners/9031-toney.gif")
                     .create_embed()
                 )
                 
