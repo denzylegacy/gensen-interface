@@ -48,7 +48,12 @@ class DropdownExchange(discord.ui.Select):
             view.value = self.labels.index(self.values[0])
             view.interaction = interaction
 
-            if int(view.value) == 0:
+            if int(view.value) == 0:  # ADD/UPDATE BITCOIN ADDRESS
+                try:
+                    await interaction.response.send_modal(BitcoinAddressRegistration())
+                except:
+                    print(traceback.format_exc())
+            elif int(view.value) == 1:
                 from sources.dropdowns.dropdown import DropdownView
 
                 embed = (
@@ -83,11 +88,6 @@ class DropdownExchange(discord.ui.Select):
                 )
                 
                 await interaction.followup.send(embed=embed, view=view, ephemeral=True)
-            elif int(view.value) == 1:  # ADD/UPDATE BITCOIN ADDRESS
-                try:
-                    await interaction.response.send_modal(BitcoinAddressRegistration())
-                except:
-                    print(traceback.format_exc())
         except Exception as e:
             print(f"An error occurred: {e}")
             tb = traceback.format_exc()
