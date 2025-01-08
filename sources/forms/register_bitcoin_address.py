@@ -22,6 +22,8 @@ class BitcoinAddressRegistration(Modal, title="Bitcoin Address registration"):
     )
 
     async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+        
         firebase = Firebase()
 
         connection = firebase.firebase_connection("root")
