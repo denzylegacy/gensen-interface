@@ -50,7 +50,7 @@ class FoxbitApiKeysRegistration(Modal, title="Foxbit API Keys Registration"):
             ).request("GET", "/rest/v3/me", None, None)
             log.info(f"Response: {meResponse}")
             
-            if not meResponse:
+            if meResponse:  # if not meResponse:
                 embed = discord.Embed(
                     title="Watch out!",
                     description="Foxbit API keys are invalid!!!",
