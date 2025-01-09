@@ -50,47 +50,47 @@ class FoxbitApiKeysRegistration(Modal, title="Foxbit API Keys Registration"):
             ).request("GET", "/rest/v3/me", None, None)
             log.info(f"Response: {meResponse}")
             
-            if meResponse:  # if not meResponse:
-                embed = discord.Embed(
-                    title="Watch out!",
-                    description="Foxbit API keys are invalid!!!",
-                    color=0xffa07a
-                )
-                embed.add_field(
-                    name="", 
-                    value="Please check whether the information you entered is correct. If you believe this is a bug, please contact my developers!",
-                    inline=False
-                )
+            # if not meResponse:
+            #     embed = discord.Embed(
+            #         title="Watch out!",
+            #         description="Foxbit API keys are invalid!!!",
+            #         color=0xffa07a
+            #     )
+            #     embed.add_field(
+            #         name="", 
+            #         value="Please check whether the information you entered is correct. If you believe this is a bug, please contact my developers!",
+            #         inline=False
+            #     )
                 
-                await interaction.followup.send(embed=embed, ephemeral=True)
-            else:
-                log.info("FOXBIT CREDENTIALS ARE VALID!")
+            #     await interaction.followup.send(embed=embed, ephemeral=True)
+            # else:
+            #     log.info("FOXBIT CREDENTIALS ARE VALID!")
 
-                firebase = Firebase()
+            firebase = Firebase()
 
-                connection.child(f"users/{interaction.user.id}/exchanges/foxbit/credentials").set(
-                    {
-                        "FOXBIT_USER_ID": Encryptor().encrypt_api_key(self.foxbit_user_id.value),
-                        "FOXBIT_ACCESS_KEY": Encryptor().encrypt_api_key(self.foxbit_access_key.value),
-                        "FOXBIT_SECRET_KEY": Encryptor().encrypt_api_key(self.foxbit_secret_key.value)
-                    }
-                )
+            connection.child(f"users/{interaction.user.id}/exchanges/foxbit/credentials").set(
+                {
+                    "FOXBIT_USER_ID": Encryptor().encrypt_api_key(self.foxbit_user_id.value),
+                    "FOXBIT_ACCESS_KEY": Encryptor().encrypt_api_key(self.foxbit_access_key.value),
+                    "FOXBIT_SECRET_KEY": Encryptor().encrypt_api_key(self.foxbit_secret_key.value)
+                }
+            )
 
-                log.info(f'[REGISTERED CREDENTIALS] {interaction.user.id}')
+            log.info(f'[REGISTERED CREDENTIALS] {interaction.user.id}')
 
-                embed = discord.Embed(
-                    title="Exchange connected successfully!",
-                    description="Foxbit API keys are valid!!!",
-                    color=0xDBD0F8
-                )
-                embed.add_field(
-                    name="", 
-                    value="From now on Gensen'll be able to operate cryptocurrencies contained in this exchange!\nAnd remember, you can **unlink** your exchange account at **any** time you wish!",
-                    inline=False
-                )
+            embed = discord.Embed(
+                title="Exchange connected successfully!",
+                description="Foxbit API keys are valid!!!",
+                color=0xDBD0F8
+            )
+            embed.add_field(
+                name="", 
+                value="From now on Gensen'll be able to operate cryptocurrencies contained in this exchange!\nAnd remember, you can **unlink** your exchange account at **any** time you wish!",
+                inline=False
+            )
 
-                await interaction.followup.send(embed=embed, ephemeral=True)
-
+            await interaction.followup.send(embed=embed, ephemeral=True)
+        
         except Exception as e:
             log.error(f"An error occurred: {str(e)}")
             await interaction.followup.send(
